@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Infoscreen</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="slideshow.js" defer></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+    }
+  
+    #slides-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+  
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 1s;
+      opacity: 0;
+    }
+  
+    .slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+  
+    .slide img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+  
+    .slide p {
+      position: absolute;
+      bottom: 40px;
+      width: 100%;
+      text-align: center;
+      font-size: 2rem;
+      color: white;
+      text-shadow: 2px 2px 5px black;
+      margin: 0;
+    }
+  </style>
+  
+  
+</head>
+<body>
+  <div id="slides-container"></div>
+</body>
+</html>
