@@ -1,7 +1,7 @@
-
 const form = document.getElementById('uploadForm');
 const status = document.getElementById('status');
 const slideList = document.getElementById('slideList');
+const statsForm = document.getElementById('statsForm');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -21,6 +21,27 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
+statsForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const stats = {
+    sickLeave: document.getElementById('sickLeaveInput').value,
+    daysWithoutInjury: document.getElementById('daysWithoutInjuryInput').value,
+    reportingFrequency: document.getElementById('reportingFrequencyInput').value,
+  };
+
+  const res = await fetch('/stats', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(stats),
+  });
+
+  if (res.ok) {
+    alert('Statistics updated!');
+  } else {
+    alert('Failed to update statistics.');
+  }
+});
+
 async function loadSlides() {
   const res = await fetch('/slides');
   const slides = await res.json();
@@ -37,52 +58,16 @@ async function loadSlides() {
     img.style.maxWidth = '150px';
     img.style.display = 'block';
 
+    const header = document.createElement('h3');
+    header.textContent = slide.header || 'No Header';
+
     const text = document.createElement('p');
-    text.textContent = slide.text;
-
-    const textInput = document.createElement('input');
-    textInput.type = 'text';
-    textInput.value = slide.text;
-    textInput.style.display = 'none';
-
-    const saveBtn = document.createElement('button');
-    saveBtn.textContent = 'Save';
-    saveBtn.style.display = 'none';
-    saveBtn.onclick = async () => {
-      const res = await fetch(`/slide/${index}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: textInput.value }),
-      });
-      if (res.ok) {
-        loadSlides();
-      }
-    };
-
-    const editBtn = document.createElement('button');
-    editBtn.textContent = 'Edit';
-    editBtn.onclick = () => {
-      text.style.display = 'none';
-      textInput.style.display = 'inline-block';
-      saveBtn.style.display = 'inline-block';
-      editBtn.style.display = 'none';
-    };
-
-    const delBtn = document.createElement('button');
-    delBtn.textContent = 'Delete';
-    delBtn.onclick = async () => {
-      if (confirm('Are you sure?')) {
-        await fetch(`/slide/${index}`, { method: 'DELETE' });
-        loadSlides();
-      }
-    };
+    text.textContent = slide.text || 'No paragraph text';
 
     div.appendChild(img);
+    div.appendChild(header);
     div.appendChild(text);
-    div.appendChild(textInput);
-    div.appendChild(editBtn);
-    div.appendChild(saveBtn);
-    div.appendChild(delBtn);
+
     slideList.appendChild(div);
   });
 }

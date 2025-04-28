@@ -4,27 +4,23 @@ let slides = [];
 async function loadSlides() {
   const res = await fetch('/slides');
   slides = await res.json();
-  const container = document.getElementById('slides-container');
-  container.innerHTML = '';
+  
+  updateSlide(); // show first slide
+  setInterval(nextSlide, 12000); // change every 12s
+}
 
-  slides.forEach((slide, index) => {
-    const div = document.createElement('div');
-    div.className = 'slide';
-    if (index === 0) div.classList.add('active');
+function updateSlide() {
+  const slide = slides[current];
+  if (!slide) return;
 
-    // ✅ Use backticks for proper variable interpolation
-    div.innerHTML = `<img src="${slide.image}" /><p>${slide.text}</p>`;
-    container.appendChild(div);
-  });
-
-  setInterval(nextSlide, 8000);
+  document.getElementById('slide-image').src = slide.image;
+  document.getElementById('slide-heading').textContent = slide.title || 'Default Title';
+  document.getElementById('slide-paragraph').textContent = slide.text || 'Default paragraph...';
 }
 
 function nextSlide() {
-  const allSlides = document.querySelectorAll('.slide');
-  allSlides[current].classList.remove('active');
   current = (current + 1) % slides.length;
-  allSlides[current].classList.add('active');
+  updateSlide();
 }
 
 loadSlides();

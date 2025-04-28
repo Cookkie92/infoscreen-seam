@@ -1,23 +1,44 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="admin-html">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Upload</title>
+  <title>Admin - Upload Slides</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <h1>Upload a New Slide</h1>
-  <form id="uploadForm">
-    <input type="file" name="image" required />
-    <input type="text" name="text" placeholder="Optional text" />
-    <button type="submit">Upload</button>
-  </form>
-  <p id="status"></p>
+<body class="admin-page">
+  <div class="container">
+    <header>
+      <h1>Slide Management</h1>
+    </header>
 
-  <h2>Uploaded Slides</h2>
-  <div id="slideList"></div>
+    <section class="upload-section">
+      <h2>Upload New Slide</h2>
+      <form id="uploadForm" class="form">
+        <input type="file" name="image" required />
+        <input type="text" name="header" placeholder="Header" />
+        <input type="text" name="text" placeholder="Paragraph text" />
+        <button type="submit" class="btn">Upload</button>
+      </form>
+      <p id="status"></p>
+    </section>
+    <section class="stats-section">
+      <h2>Update Statistics</h2>
+      <form id="statsForm" class="form">
+        <input type="text" id="sickLeaveInput" placeholder="Sick Leave %" />
+        <input type="text" id="daysWithoutInjuryInput" placeholder="Days Without Injury" />
+        <input type="text" id="reportingFrequencyInput" placeholder="Reporting Frequency %" />
+        <button type="submit" class="btn">Save Statistics</button>
+      </form>
+    </section>
+
+    <section class="slides-section">
+      <h2>Uploaded Slides</h2>
+      <div id="slideList" class="slide-list"></div>
+    </section>
+
+    
+  </div>
 
   <script src="admin.js"></script>
 </body>
