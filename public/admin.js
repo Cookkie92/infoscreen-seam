@@ -6,12 +6,19 @@ const statsForm = document.getElementById('statsForm');
 // Handle slide upload
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const formData = new FormData(form);
+  
+  const header = document.getElementById('headerInput').value.trim();
+  const text = document.getElementById('textInput').value.trim();
+  const image = document.getElementById('image').files[0];
 
-  const header = document.getElementById('headerInput').value;
+  if (!header || !text || !image) {
+    status.textContent = 'Please fill in all fields and select an image.';
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('image', image);
   formData.append('header', header);
-
-  const text = document.getElementById('textInput').value;
   formData.append('text', text);
 
   const res = await fetch('/upload', {
@@ -37,24 +44,24 @@ function showToast(message) {
 
   setTimeout(() => {
     toast.classList.add('show');
-  }, 100); // Slight delay for transition
+  }, 100);
 
   setTimeout(() => {
     toast.classList.remove('show');
     setTimeout(() => {
       document.body.removeChild(toast);
     }, 500);
-  }, 2500); // Show toast for 2.5 seconds
+  }, 2500);
 }
-
 
 // Handle statistics update
 statsForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const stats = {
-    sickLeave: document.getElementById('sickLeaveInput').value,
-    daysWithoutInjury: document.getElementById('daysWithoutInjuryInput').value,
-    reportingFrequency: document.getElementById('reportingFrequencyInput').value,
+    sickLeave: document.getElementById('sickLeaveInput').value.trim(),
+    daysWithoutInjury: document.getElementById('daysWithoutInjuryInput').value.trim(),
+    reportingFrequency: document.getElementById('reportingFrequencyInput').value.trim(),
   };
 
   const res = await fetch('/stats', {
@@ -82,29 +89,26 @@ async function loadSlides() {
 
     const img = document.createElement('img');
     img.src = slide.image;
-    img.className = 'slide-img';  // ✅ Use a CSS class!
+    img.className = 'slide-img';
 
-    // Create styled header input
     const headerInput = document.createElement('input');
     headerInput.value = slide.header || '';
     headerInput.placeholder = 'Edit header...';
     headerInput.className = 'slide-header-input';
 
-    // Create styled paragraph text input
     const textInput = document.createElement('textarea');
     textInput.value = slide.text || '';
     textInput.placeholder = 'Edit paragraph text...';
     textInput.rows = 3;
     textInput.className = 'slide-textarea';
 
-    // Save button
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
     saveButton.className = 'save-btn';
     saveButton.onclick = async () => {
       const updated = {
-        header: headerInput.value,
-        text: textInput.value
+        header: headerInput.value.trim(),
+        text: textInput.value.trim()
       };
       await fetch(`/slide/${index}`, {
         method: 'PUT',
@@ -115,7 +119,6 @@ async function loadSlides() {
       loadSlides();
     };
 
-    // Preview button
     const previewButton = document.createElement('button');
     previewButton.textContent = 'Preview';
     previewButton.className = 'preview-btn';
@@ -123,7 +126,6 @@ async function loadSlides() {
       window.location.href = `/preview.html?slide=${index}`;
     };
 
-    // Delete button
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.className = 'delete-btn';
@@ -134,7 +136,6 @@ async function loadSlides() {
       }
     };
 
-    // Append elements to slide card
     div.appendChild(img);
     div.appendChild(headerInput);
     div.appendChild(textInput);
@@ -142,7 +143,6 @@ async function loadSlides() {
     div.appendChild(previewButton);
     div.appendChild(deleteButton);
 
-    // Add the slide to the list
     slideList.appendChild(div);
   });
 }

@@ -7,16 +7,17 @@
 </head>
 <body>
   <div class="admin-container">
+    
     <h1>Upload New Slide</h1>
     <form id="uploadForm" enctype="multipart/form-data" class="admin-form">
       <label for="image">Image File</label>
       <input type="file" name="image" id="image" required>
 
-      <label for="headerInput">Header (optional)</label>
-      <input type="text" name="header" id="headerInput" placeholder="Enter a header...">
+      <label for="headerInput">Slide Header</label>
+      <input type="text" id="headerInput" placeholder="Enter a header..." required>
 
-      <label for="textInput">Paragraph Text (optional)</label>
-      <textarea name="text" id="textInput" rows="4" placeholder="Enter paragraph text..."></textarea>
+      <label for="textInput">Slide Paragraph Text</label>
+      <textarea id="textInput" rows="4" placeholder="Enter paragraph text..." required></textarea>
 
       <button type="submit">Upload Slide</button>
       <p id="status"></p>
@@ -25,13 +26,13 @@
     <h1>Update Statistics</h1>
     <form id="statsForm" class="admin-form">
       <label for="sickLeaveInput">Sick Leave (%)</label>
-      <input type="text" id="sickLeaveInput" placeholder="Enter sick leave percentage">
+      <input type="text" id="sickLeaveInput" placeholder="Enter sick leave percentage" required>
 
       <label for="daysWithoutInjuryInput">Days Without Injury</label>
-      <input type="text" id="daysWithoutInjuryInput" placeholder="Enter number of days">
+      <input type="text" id="daysWithoutInjuryInput" placeholder="Enter number of days" required>
 
       <label for="reportingFrequencyInput">Reporting Frequency</label>
-      <input type="text" id="reportingFrequencyInput" placeholder="Enter reporting frequency">
+      <input type="text" id="reportingFrequencyInput" placeholder="Enter reporting frequency" required>
 
       <button type="submit">Update Statistics</button>
     </form>
