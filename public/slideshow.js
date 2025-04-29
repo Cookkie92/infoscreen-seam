@@ -5,8 +5,19 @@ async function loadSlides() {
   const res = await fetch('/slides');
   slides = await res.json();
   
-  updateSlide(); // show first slide
-  setInterval(nextSlide, 12000); // change every 12s
+  updateSlide();
+  setInterval(nextSlide, 12000);
+
+  loadStats();
+}
+
+async function loadStats() {
+  const res = await fetch('/stats');
+  const stats = await res.json();
+
+  document.getElementById('sick-leave').textContent = stats.sickLeave || '0%';
+  document.getElementById('days-without-injury').textContent = stats.daysWithoutInjury || '0';
+  document.getElementById('reporting-frequency').textContent = stats.reportingFrequency || '0%';
 }
 
 function updateSlide() {
@@ -14,7 +25,7 @@ function updateSlide() {
   if (!slide) return;
 
   document.getElementById('slide-image').src = slide.image;
-  document.getElementById('slide-heading').textContent = slide.title || 'Default Title';
+  document.getElementById('slide-heading').textContent = slide.header || 'Default Title';
   document.getElementById('slide-paragraph').textContent = slide.text || 'Default paragraph...';
 }
 

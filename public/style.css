@@ -68,3 +68,121 @@ html, body {
   font-size:30px;
   font-weight:bold;
 }
+
+
+/* Admin main container */
+.admin-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #003366; /* slightly lighter blue for the panel background */
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Headings */
+.admin-container h1, .admin-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+/* Forms */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-form label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #cce7ff;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="file"],
+.admin-form textarea {
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 1px solid #0056b3;
+  border-radius: 8px;
+  background: #002b5c;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.admin-form textarea {
+  resize: vertical;
+}
+
+.admin-form button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.admin-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Upload success status */
+#status {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #00ffae;
+  text-align: center;
+}
+
+/* Slide List */
+#slideList {
+  margin-top: 30px;
+}
+
+/* Each Slide Item */
+.slide-item {
+  background-color: #002244;
+  border: 1px solid #004080;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slide-item img {
+  max-width: 200px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.slide-item h3 {
+  margin: 10px 0 5px;
+  font-size: 22px;
+  color: #cce7ff;
+}
+
+.slide-item p {
+  color: #cce7ff;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .admin-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .slide-item img {
+    max-width: 100%;
+  }
+}

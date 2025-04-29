@@ -1,43 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" class="admin-html">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin - Upload Slides</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Admin Panel - Infoscreen</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="admin-page">
-  <div class="container">
-    <header>
-      <h1>Slide Management</h1>
-    </header>
+<body>
+  <div class="admin-container">
+    <h1>Upload New Slide</h1>
+    <form id="uploadForm" enctype="multipart/form-data" class="admin-form">
+      <label for="image">Image File</label>
+      <input type="file" name="image" id="image" required>
 
-    <section class="upload-section">
-      <h2>Upload New Slide</h2>
-      <form id="uploadForm" class="form">
-        <input type="file" name="image" required />
-        <input type="text" name="header" placeholder="Header" />
-        <input type="text" name="text" placeholder="Paragraph text" />
-        <button type="submit" class="btn">Upload</button>
-      </form>
+      <label for="headerInput">Header (optional)</label>
+      <input type="text" name="header" id="headerInput" placeholder="Enter a header...">
+
+      <label for="textInput">Paragraph Text (optional)</label>
+      <textarea name="text" id="textInput" rows="4" placeholder="Enter paragraph text..."></textarea>
+
+      <button type="submit">Upload Slide</button>
       <p id="status"></p>
-    </section>
-    <section class="stats-section">
-      <h2>Update Statistics</h2>
-      <form id="statsForm" class="form">
-        <input type="text" id="sickLeaveInput" placeholder="Sick Leave %" />
-        <input type="text" id="daysWithoutInjuryInput" placeholder="Days Without Injury" />
-        <input type="text" id="reportingFrequencyInput" placeholder="Reporting Frequency %" />
-        <button type="submit" class="btn">Save Statistics</button>
-      </form>
-    </section>
+    </form>
 
-    <section class="slides-section">
-      <h2>Uploaded Slides</h2>
-      <div id="slideList" class="slide-list"></div>
-    </section>
+    <h1>Update Statistics</h1>
+    <form id="statsForm" class="admin-form">
+      <label for="sickLeaveInput">Sick Leave (%)</label>
+      <input type="text" id="sickLeaveInput" placeholder="Enter sick leave percentage">
 
-    
+      <label for="daysWithoutInjuryInput">Days Without Injury</label>
+      <input type="text" id="daysWithoutInjuryInput" placeholder="Enter number of days">
+
+      <label for="reportingFrequencyInput">Reporting Frequency</label>
+      <input type="text" id="reportingFrequencyInput" placeholder="Enter reporting frequency">
+
+      <button type="submit">Update Statistics</button>
+    </form>
+
+    <h2>Existing Slides</h2>
+    <div id="slideList"></div>
   </div>
 
   <script src="admin.js"></script>
