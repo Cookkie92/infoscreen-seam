@@ -28,6 +28,26 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
+// Toast function
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('show');
+  }, 100); // Slight delay for transition
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      document.body.removeChild(toast);
+    }, 500);
+  }, 2500); // Show toast for 2.5 seconds
+}
+
+
 // Handle statistics update
 statsForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -62,22 +82,25 @@ async function loadSlides() {
 
     const img = document.createElement('img');
     img.src = slide.image;
-    img.style.maxWidth = '150px';
-    img.style.marginBottom = '10px';
+    img.className = 'slide-img';  // ✅ Use a CSS class!
 
+    // Create styled header input
     const headerInput = document.createElement('input');
     headerInput.value = slide.header || '';
     headerInput.placeholder = 'Edit header...';
-    headerInput.style.marginBottom = '5px';
+    headerInput.className = 'slide-header-input';
 
+    // Create styled paragraph text input
     const textInput = document.createElement('textarea');
     textInput.value = slide.text || '';
     textInput.placeholder = 'Edit paragraph text...';
     textInput.rows = 3;
+    textInput.className = 'slide-textarea';
 
+    // Save button
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
-    saveButton.style.marginTop = '5px';
+    saveButton.className = 'save-btn';
     saveButton.onclick = async () => {
       const updated = {
         header: headerInput.value,
@@ -88,12 +111,22 @@ async function loadSlides() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updated)
       });
+      showToast('✔ Slide saved!');
       loadSlides();
     };
 
+    // Preview button
+    const previewButton = document.createElement('button');
+    previewButton.textContent = 'Preview';
+    previewButton.className = 'preview-btn';
+    previewButton.onclick = () => {
+      window.location.href = `/preview.html?slide=${index}`;
+    };
+
+    // Delete button
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
-    deleteButton.style.backgroundColor = '#dc3545';
+    deleteButton.className = 'delete-btn';
     deleteButton.onclick = async () => {
       if (confirm('Are you sure you want to delete this slide?')) {
         await fetch(`/slide/${index}`, { method: 'DELETE' });
@@ -101,13 +134,7 @@ async function loadSlides() {
       }
     };
 
-    const previewButton = document.createElement('button');
-    previewButton.textContent = 'Preview';
-    previewButton.style.backgroundColor = '#007bff';
-    previewButton.onclick = () => {
-      window.location.href = `/preview.html?slide=${index}`;
-    };
-
+    // Append elements to slide card
     div.appendChild(img);
     div.appendChild(headerInput);
     div.appendChild(textInput);
@@ -115,6 +142,7 @@ async function loadSlides() {
     div.appendChild(previewButton);
     div.appendChild(deleteButton);
 
+    // Add the slide to the list
     slideList.appendChild(div);
   });
 }
