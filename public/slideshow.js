@@ -4,11 +4,10 @@ let slides = [];
 async function loadSlides() {
   const res = await fetch('/slides');
   slides = await res.json();
-  
+
+  await loadStats();
   updateSlide();
   setInterval(nextSlide, 12000);
-
-  loadStats();
 }
 
 async function loadStats() {
@@ -25,8 +24,23 @@ function updateSlide() {
   if (!slide) return;
 
   document.getElementById('slide-image').src = slide.image;
-  document.getElementById('slide-heading').textContent = slide.header || 'Default Title';
-  document.getElementById('slide-paragraph').textContent = slide.text || 'Default paragraph...';
+
+  const heading = document.getElementById('slide-heading');
+  const paragraph = document.getElementById('slide-paragraph');
+
+  if (slide.header && slide.header.trim() !== '') {
+    heading.textContent = slide.header;
+    heading.style.display = 'block';
+  } else {
+    heading.style.display = 'none';
+  }
+
+  if (slide.text && slide.text.trim() !== '') {
+    paragraph.textContent = slide.text;
+    paragraph.style.display = 'block';
+  } else {
+    paragraph.style.display = 'none';
+  }
 }
 
 function nextSlide() {
