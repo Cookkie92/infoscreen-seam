@@ -7,17 +7,19 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 
-// Create folders if missing
+// File paths
 const uploadsDir = path.join(__dirname, 'uploads');
 const dataDir = path.join(__dirname, 'data');
 const slidesFile = path.join(dataDir, 'slides.json');
 const statsFile = path.join(dataDir, 'stats.json');
 
+// Ensure folders/files exist
 fs.mkdirSync(uploadsDir, { recursive: true });
 fs.mkdirSync(dataDir, { recursive: true });
 
@@ -40,18 +42,26 @@ const upload = multer({ storage });
 // Upload a new slide
 app.post('/upload', upload.single('image'), (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No image uploaded.' });
+    }
+
+    const { header = '', text = '' } = req.body;
     const slides = JSON.parse(fs.readFileSync(slidesFile));
+
     const newSlide = {
       image: `/uploads/${req.file.filename}`,
-      header: req.body.header || '',
-      text: req.body.text || '',
+      header,
+      text,
     };
+
     slides.push(newSlide);
     fs.writeFileSync(slidesFile, JSON.stringify(slides, null, 2));
+
     res.status(200).json({ success: true });
   } catch (err) {
     console.error('Upload Error:', err);
-    res.status(500).json({ error: 'Failed to upload slide' });
+    res.status(500).json({ error: 'Failed to upload slide.' });
   }
 });
 
@@ -62,7 +72,7 @@ app.get('/slides', (req, res) => {
     res.json(slides);
   } catch (err) {
     console.error('Load Slides Error:', err);
-    res.status(500).json({ error: 'Failed to load slides' });
+    res.status(500).json({ error: 'Failed to load slides.' });
   }
 });
 
@@ -71,10 +81,11 @@ app.delete('/slide/:index', (req, res) => {
   try {
     const index = parseInt(req.params.index, 10);
     let slides = JSON.parse(fs.readFileSync(slidesFile));
+
     if (index >= 0 && index < slides.length) {
       const [removed] = slides.splice(index, 1);
       fs.writeFileSync(slidesFile, JSON.stringify(slides, null, 2));
-      
+
       const imagePath = path.join(__dirname, removed.image);
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
@@ -82,11 +93,11 @@ app.delete('/slide/:index', (req, res) => {
 
       res.json({ success: true });
     } else {
-      res.status(400).json({ error: 'Invalid index' });
+      res.status(400).json({ error: 'Invalid slide index.' });
     }
   } catch (err) {
     console.error('Delete Slide Error:', err);
-    res.status(500).json({ error: 'Failed to delete slide' });
+    res.status(500).json({ error: 'Failed to delete slide.' });
   }
 });
 
@@ -94,18 +105,20 @@ app.delete('/slide/:index', (req, res) => {
 app.put('/slide/:index', (req, res) => {
   try {
     const index = parseInt(req.params.index, 10);
+    const { header, text } = req.body;
     let slides = JSON.parse(fs.readFileSync(slidesFile));
+
     if (index >= 0 && index < slides.length) {
-      slides[index].header = req.body.header || slides[index].header;
-      slides[index].text = req.body.text || slides[index].text;
+      slides[index].header = header ?? slides[index].header;
+      slides[index].text = text ?? slides[index].text;
       fs.writeFileSync(slidesFile, JSON.stringify(slides, null, 2));
       res.json({ success: true });
     } else {
-      res.status(400).json({ error: 'Invalid index' });
+      res.status(400).json({ error: 'Invalid slide index.' });
     }
   } catch (err) {
     console.error('Edit Slide Error:', err);
-    res.status(500).json({ error: 'Failed to edit slide' });
+    res.status(500).json({ error: 'Failed to edit slide.' });
   }
 });
 
@@ -121,7 +134,7 @@ app.post('/stats', (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     console.error('Update Stats Error:', err);
-    res.status(500).json({ error: 'Failed to update statistics' });
+    res.status(500).json({ error: 'Failed to update statistics.' });
   }
 });
 
@@ -132,10 +145,11 @@ app.get('/stats', (req, res) => {
     res.json(stats);
   } catch (err) {
     console.error('Load Stats Error:', err);
-    res.status(500).json({ error: 'Failed to read statistics' });
+    res.status(500).json({ error: 'Failed to load statistics.' });
   }
 });
 
+// Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
