@@ -27,19 +27,40 @@ function updateSlide() {
 
   const heading = document.getElementById('slide-heading');
   const paragraph = document.getElementById('slide-paragraph');
+  const textWrapper = document.querySelector('.text-wrapper');
+  const topSection = document.querySelector('.top-section');
 
-  if (slide.header && slide.header.trim() !== '') {
+  const hasHeader = slide.header && slide.header.trim() !== '';
+  const hasText = slide.text && slide.text.trim() !== '';
+
+  // Content handling
+  if (hasHeader) {
     heading.textContent = slide.header;
     heading.style.display = 'block';
   } else {
     heading.style.display = 'none';
   }
 
-  if (slide.text && slide.text.trim() !== '') {
+  if (hasText) {
     paragraph.textContent = slide.text;
     paragraph.style.display = 'block';
   } else {
     paragraph.style.display = 'none';
+  }
+
+  // Font and color handling
+  heading.style.color = slide.headerColor || '#ffffff';
+  heading.style.fontFamily = slide.headerFont || 'inherit';
+  paragraph.style.color = slide.textColor || '#ffffff';
+  paragraph.style.fontFamily = slide.textFont || 'inherit';
+
+  // Layout handling
+  if (hasHeader || hasText) {
+    topSection.classList.add('with-text');
+    textWrapper.style.display = 'flex';
+  } else {
+    topSection.classList.remove('with-text');
+    textWrapper.style.display = 'none';
   }
 }
 

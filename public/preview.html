@@ -7,8 +7,10 @@
   <script src="preview.js" defer></script>
 </head>
 <body class="infoscreen-page">
+  <div class="background-circles"></div>
+
   <div class="main-container">
-    <button id="backButton" style="font-size:24px; margin: 1rem;">⬅ Back</button>
+    <button id="backButton" style="font-size: 20px; margin-bottom: 1rem;">⬅ Back to Admin</button>
 
     <div class="top-section">
       <div class="image-wrapper">
@@ -18,6 +20,14 @@
       <div class="text-wrapper">
         <h1 id="slide-heading">Heading here</h1>
         <p id="slide-paragraph">Paragraph text goes here...</p>
+      </div>
+    </div>
+
+    <div class="bottom-section">
+      <div class="bottom-info">
+        <p>Sick leave: <span id="sick-leave">0%</span></p>
+        <p>Days without injury: <span id="days-without-injury">0</span></p>
+        <p>Reporting frequency: <span id="reporting-frequency">0%</span></p>
       </div>
     </div>
   </div>

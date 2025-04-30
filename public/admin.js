@@ -1,3 +1,4 @@
+// ✅ admin.js with header & text style support
 const form = document.getElementById('uploadForm');
 const status = document.getElementById('status');
 const slideList = document.getElementById('slideList');
@@ -6,13 +7,17 @@ const statsForm = document.getElementById('statsForm');
 // Handle slide upload
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  
+
   const header = document.getElementById('headerInput').value.trim();
   const text = document.getElementById('textInput').value.trim();
   const image = document.getElementById('image').files[0];
+  const headerColor = document.getElementById('headerColor').value;
+  const headerFont = document.getElementById('headerFont').value;
+  const textColor = document.getElementById('textColor').value;
+  const textFont = document.getElementById('textFont').value;
 
-  if (!header || !text || !image) {
-    status.textContent = 'Please fill in all fields and select an image.';
+  if (!image) {
+    status.textContent = 'Please select an image.';
     return;
   }
 
@@ -20,6 +25,10 @@ form.addEventListener('submit', async (e) => {
   formData.append('image', image);
   formData.append('header', header);
   formData.append('text', text);
+  formData.append('headerColor', headerColor);
+  formData.append('headerFont', headerFont);
+  formData.append('textColor', textColor);
+  formData.append('textFont', textFont);
 
   const res = await fetch('/upload', {
     method: 'POST',
@@ -144,6 +153,31 @@ async function loadSlides() {
     div.appendChild(deleteButton);
 
     slideList.appendChild(div);
+  });
+}
+
+// Live preview for selected fonts
+document.getElementById('headerFont').addEventListener('change', function () {
+  this.style.fontFamily = this.value;
+});
+
+document.getElementById('textFont').addEventListener('change', function () {
+  this.style.fontFamily = this.value;
+});
+
+// Delete all slides
+const deleteAllBtn = document.getElementById('deleteAllBtn');
+if (deleteAllBtn) {
+  deleteAllBtn.addEventListener('click', async () => {
+    if (confirm('Are you sure you want to delete ALL slides? This cannot be undone.')) {
+      const res = await fetch('/slides', { method: 'DELETE' });
+      if (res.ok) {
+        showToast('🗑️ All slides deleted!');
+        loadSlides();
+      } else {
+        alert('Failed to delete slides.');
+      }
+    }
   });
 }
 

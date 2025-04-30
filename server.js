@@ -46,13 +46,25 @@ app.post('/upload', upload.single('image'), (req, res) => {
       return res.status(400).json({ error: 'No image uploaded.' });
     }
 
-    const { header = '', text = '' } = req.body;
+    const {
+      header = '',
+      text = '',
+      headerColor = '#ffffff',
+      headerFont = 'inherit',
+      textColor = '#ffffff',
+      textFont = 'inherit'
+    } = req.body;
+
     const slides = JSON.parse(fs.readFileSync(slidesFile));
 
     const newSlide = {
       image: `/uploads/${req.file.filename}`,
       header,
       text,
+      headerColor,
+      headerFont,
+      textColor,
+      textFont
     };
 
     slides.push(newSlide);
@@ -86,7 +98,7 @@ app.delete('/slide/:index', (req, res) => {
       const [removed] = slides.splice(index, 1);
       fs.writeFileSync(slidesFile, JSON.stringify(slides, null, 2));
 
-      const imagePath = path.join(__dirname, removed.image);
+      const imagePath = path.join(__dirname, 'uploads', path.basename(removed.image));
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }
@@ -98,6 +110,29 @@ app.delete('/slide/:index', (req, res) => {
   } catch (err) {
     console.error('Delete Slide Error:', err);
     res.status(500).json({ error: 'Failed to delete slide.' });
+  }
+});
+
+// Delete all slides
+app.delete('/slides', (req, res) => {
+  try {
+    const slides = JSON.parse(fs.readFileSync(slidesFile));
+
+    // Remove all uploaded images
+    slides.forEach(slide => {
+      const imagePath = path.join(__dirname, 'uploads', path.basename(slide.image));
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    });
+
+    // Clear the slides file
+    fs.writeFileSync(slidesFile, '[]');
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Delete All Slides Error:', err);
+    res.status(500).json({ error: 'Failed to delete all slides.' });
   }
 });
 

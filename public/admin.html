@@ -3,23 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin Panel - Infoscreen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Lobster&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="admin-container">
-    
+
     <h1>Upload New Slide</h1>
     <form id="uploadForm" enctype="multipart/form-data" class="admin-form">
       <label for="image">Image File</label>
       <input type="file" name="image" id="image" required>
 
+      <label for="headerColor">Header Color</label>
+      <input type="color" id="headerColor" name="headerColor" value="#ffffff">
+
+      <label for="headerFont">Header Font</label>
+      <select id="headerFont">
+        <option value="inherit">Default</option>
+        <option value="Arial">Arial</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="'Roboto', sans-serif">Roboto</option>
+        <option value="'Lobster', cursive">Lobster</option>
+        <option value="'Source Sans 3', sans-serif">Source Sans 3</option>
+
+      </select>
+
       <label for="headerInput">Slide Header</label>
-      <input type="text" id="headerInput" placeholder="Enter a header..." required>
+      <input type="text" id="headerInput" placeholder="Enter a header...">
+
+      <label for="textColor">Text Color</label>
+      <input type="color" id="textColor" name="textColor" value="#ffffff">
+
+      <label for="textFont">Text Font</label>
+      <select id="textFont">
+        <option value="inherit">Default</option>
+        <option value="Arial">Arial</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="'Roboto', sans-serif">Roboto</option>
+        <option value="'Lobster', cursive">Lobster</option>
+        <option value="'Source Sans 3', sans-serif">Source Sans 3</option>
+
+      </select>
 
       <label for="textInput">Slide Paragraph Text</label>
-      <textarea id="textInput" rows="4" placeholder="Enter paragraph text..." required></textarea>
+      <textarea id="textInput" rows="4" placeholder="Enter paragraph text..."></textarea>
 
       <button type="submit">Upload Slide</button>
+      <button type="button" onclick="window.location.href='/infoscreenpreview.html'">
+        Preview All Slides
+      </button>
+      
       <p id="status"></p>
     </form>
 
@@ -38,6 +75,9 @@
     </form>
 
     <h2>Existing Slides</h2>
+    <button id="deleteAllBtn" class="delete-all-btn">🗑 Delete All Slides</button>
+
+    
     <div id="slideList"></div>
   </div>
 

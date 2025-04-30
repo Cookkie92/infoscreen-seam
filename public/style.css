@@ -31,11 +31,19 @@ html, body {
   justify-content: center;
   overflow: hidden;
   text-align: center;
+  transition: all 0.3s ease;
 }
 
-/* Image wrapper */
+.top-section.with-text {
+  flex-direction: row;
+  align-items: stretch;
+  text-align: left;
+  gap: 2rem;
+}
+
+/* Image styles */
 .image-wrapper {
-  flex: 1;
+  flex: 7;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,9 +57,14 @@ html, body {
   border-radius: 8px;
 }
 
-/* Text content */
+/* Text styles */
 .text-wrapper {
-  margin-top: 1rem;
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 2px solid #0056b3;
+  padding-left: 1.5rem;
 }
 
 .text-wrapper h1 {
@@ -63,6 +76,7 @@ html, body {
   font-size: 1.25rem;
   line-height: 1.6;
 }
+
 
 /* Bottom section */
 .bottom-section {
@@ -91,6 +105,25 @@ html, body {
 /* ---------------------- */
 /* Admin Section Styling  */
 /* ---------------------- */
+
+button.delete-all-btn {
+  background-color: #dc3545;
+  color: #ffffff;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.delete-all-btn:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
 
 .admin-container {
   max-width: 850px;
@@ -150,6 +183,34 @@ html, body {
 .admin-form button:hover {
   background-color: #0056b3;
   transform: scale(1.05);
+}
+
+/* Font & color selector inputs */
+.admin-form input[type="color"],
+.admin-form select {
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 1px solid #0056b3;
+  border-radius: 8px;
+  background: #002b5c;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: inherit;
+  appearance: none;
+}
+
+/* Make color pickers more visually distinct */
+.admin-form input[type="color"] {
+  height: 40px;
+  width: 100%;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+#headerFont,
+#textFont {
+  font-family: inherit;
+  transition: font-family 0.3s ease;
 }
 
 #status {

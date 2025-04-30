@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Preview All Slides</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .preview-controls {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+  
+    .preview-controls button {
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      background-color: #0056b3;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+  
+    .preview-controls button:hover {
+      background-color: #003f80;
+    }
+  </style>
+  
+</head>
+<body class="infoscreen-page">
+  <div class="background-circles"></div>
+
+  <div class="main-container">
+    <div class="top-section">
+      <div class="image-wrapper">
+        <img id="slide-image" src="" alt="Slide" />
+      </div>
+      <div class="text-wrapper">
+        <h1 id="slide-heading"></h1>
+        <p id="slide-paragraph"></p>
+      </div>
+    </div>
+
+    <div class="bottom-section">
+      <div class="bottom-info">
+        <p>Sick leave: <span id="sick-leave">0%</span></p>
+        <p>Days without injury: <span id="days-without-injury">0</span></p>
+        <p>Reporting frequency: <span id="reporting-frequency">0%</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-controls">
+    <button onclick="prevSlide()">Previous</button>
+    <button onclick="nextSlide()">Next</button>
+    <button onclick="window.location.href = '/admin.html';">Back to Admin</button>
+  </div>
+
+  <script src="infoscreenpreview.js"></script>
+</body>
+</html>
