@@ -357,6 +357,21 @@ button.delete-btn:hover {
   resize: vertical;
 }
 
+#slide-image.fade-out,
+#slide-heading.fade-out,
+#slide-paragraph.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#slide-image,
+#slide-heading,
+#slide-paragraph {
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+
 /* Toast Notification */
 .toast {
   position: fixed;
@@ -400,6 +415,14 @@ button.delete-btn:hover {
   position: absolute;
   border-radius: 50%;
   opacity: 0,4;
+}
+.clock {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: right;
+  color: #ffffff;
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
 
