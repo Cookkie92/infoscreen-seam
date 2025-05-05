@@ -27,7 +27,6 @@
         <option value="'Roboto', sans-serif">Roboto</option>
         <option value="'Lobster', cursive">Lobster</option>
         <option value="'Source Sans 3', sans-serif">Source Sans 3</option>
-
       </select>
 
       <label for="headerInput">Slide Header</label>
@@ -46,7 +45,6 @@
         <option value="'Roboto', sans-serif">Roboto</option>
         <option value="'Lobster', cursive">Lobster</option>
         <option value="'Source Sans 3', sans-serif">Source Sans 3</option>
-
       </select>
 
       <label for="textInput">Slide Paragraph Text</label>
@@ -56,20 +54,20 @@
       <button type="button" onclick="window.location.href='/infoscreenpreview.html'">
         Preview All Slides
       </button>
-      
+
       <p id="status"></p>
     </form>
 
     <h1>Update Statistics</h1>
     <form id="statsForm" class="admin-form">
       <label for="sickLeaveInput">Sick Leave (%)</label>
-      <input type="text" id="sickLeaveInput" placeholder="Enter sick leave percentage" required>
+      <input type="text" id="sickLeaveInput" placeholder="Enter sick leave percentage">
 
       <label for="daysWithoutInjuryInput">Days Without Injury</label>
-      <input type="text" id="daysWithoutInjuryInput" placeholder="Enter number of days" required>
+      <input type="text" id="daysWithoutInjuryInput" placeholder="Enter number of days">
 
       <label for="reportingFrequencyInput">Reporting Frequency</label>
-      <input type="text" id="reportingFrequencyInput" placeholder="Enter reporting frequency" required>
+      <input type="text" id="reportingFrequencyInput" placeholder="Enter reporting frequency">
 
       <button type="submit">Update Statistics</button>
     </form>
@@ -77,7 +75,6 @@
     <h2>Existing Slides</h2>
     <button id="deleteAllBtn" class="delete-all-btn">🗑 Delete All Slides</button>
 
-    
     <div id="slideList"></div>
   </div>
 

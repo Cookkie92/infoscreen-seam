@@ -157,15 +157,17 @@ app.put('/slide/:index', (req, res) => {
   }
 });
 
-// Update statistics
+// Update statistics (partial allowed)
 app.post('/stats', (req, res) => {
   try {
-    const stats = {
-      sickLeave: req.body.sickLeave || "0%",
-      daysWithoutInjury: req.body.daysWithoutInjury || "0",
-      reportingFrequency: req.body.reportingFrequency || "0%",
+    const currentStats = JSON.parse(fs.readFileSync(statsFile));
+
+    const updatedStats = {
+      ...currentStats,
+      ...req.body
     };
-    fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+
+    fs.writeFileSync(statsFile, JSON.stringify(updatedStats, null, 2));
     res.status(200).json({ success: true });
   } catch (err) {
     console.error('Update Stats Error:', err);

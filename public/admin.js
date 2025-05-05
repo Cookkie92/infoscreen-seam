@@ -67,11 +67,23 @@ function showToast(message) {
 statsForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const stats = {
-    sickLeave: document.getElementById('sickLeaveInput').value.trim(),
-    daysWithoutInjury: document.getElementById('daysWithoutInjuryInput').value.trim(),
-    reportingFrequency: document.getElementById('reportingFrequencyInput').value.trim(),
-  };
+  let sickLeave = document.getElementById('sickLeaveInput').value.trim();
+  const daysWithoutInjury = document.getElementById('daysWithoutInjuryInput').value.trim();
+  const reportingFrequency = document.getElementById('reportingFrequencyInput').value.trim();
+
+  if (sickLeave && !sickLeave.endsWith('%')) {
+    sickLeave += '%';
+  }
+
+  const stats = {};
+  if (sickLeave !== '') stats.sickLeave = sickLeave;
+  if (daysWithoutInjury !== '') stats.daysWithoutInjury = daysWithoutInjury;
+  if (reportingFrequency !== '') stats.reportingFrequency = reportingFrequency;
+
+  if (Object.keys(stats).length === 0) {
+    alert('Please enter at least one field to update.');
+    return;
+  }
 
   const res = await fetch('/stats', {
     method: 'POST',
@@ -81,6 +93,7 @@ statsForm.addEventListener('submit', async (e) => {
 
   if (res.ok) {
     alert('Statistics updated!');
+    statsForm.reset();
   } else {
     alert('Failed to update statistics.');
   }

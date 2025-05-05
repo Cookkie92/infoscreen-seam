@@ -68,39 +68,82 @@ html, body {
 }
 
 .text-wrapper h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  color: #ffffff;
   margin: 0 0 1rem 0;
-  font-size: 2.5rem;
+  text-align: center;
 }
+.text-wrapper h1 {
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.text-wrapper h1::after {
+  content: '';
+  display: block;
+  width: 200px;
+  height: 4px;
+  margin: 0.5rem auto 0;
+  background: #007bff;
+  border-radius: 2px;
+  opacity:0.2;
+}
+
 
 .text-wrapper p {
   font-size: 1.25rem;
   line-height: 1.6;
+  margin: 0 0 1rem 0;
+  text-align: center;
 }
 
 
 /* Bottom section */
 .bottom-section {
   flex-shrink: 0;
-  padding-top: 1rem;
+  padding: 1rem 2rem;
   margin-top: 2rem;
-  border-top: 2px solid #0056b3;
+  background-color: rgba(0, 36, 73, 0.8);
+  border-top: 2px solid #007acc;
+  border-radius: 12px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .bottom-info {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  gap: 2rem;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1rem 0;
 }
 
-.bottom-info p {
-  margin: 0;
-  font-size: 24px;
-  font-weight: bold;
+.stat-box {
+  flex: 1;
+  min-width: 200px;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
   text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+.stat-box p {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #cceeff;
+}
+
+.stat-box span {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-top: 0.5rem;
+}
+
 
 /* ---------------------- */
 /* Admin Section Styling  */
