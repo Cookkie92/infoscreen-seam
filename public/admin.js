@@ -1,4 +1,4 @@
-// ✅ admin.js with full slide + celebration support
+// ✅ admin.js with full slide + celebration support (fixed field names)
 const form = document.getElementById('uploadForm');
 const status = document.getElementById('status');
 const slideList = document.getElementById('slideList');
@@ -46,7 +46,7 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// Handle celebration upload
+// ✅ Fixed field names for celebration upload
 celebrationForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const image = document.getElementById('celebrationImage').files[0];
@@ -58,8 +58,8 @@ celebrationForm.addEventListener('submit', async (e) => {
   }
 
   const formData = new FormData();
-  formData.append('image', image);
-  if (sound) formData.append('sound', sound);
+  formData.append('celebrationImage', image);
+  if (sound) formData.append('celebrationSound', sound);
 
   const res = await fetch('/celebration', {
     method: 'POST',

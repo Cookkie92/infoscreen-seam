@@ -36,6 +36,8 @@ if (!fs.existsSync(celebrationFile)) {
   fs.writeFileSync(celebrationFile, JSON.stringify({ image: '', sound: '' }, null, 2));
 }
 
+let celebrationTrigger = false;
+
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads'),
@@ -122,6 +124,19 @@ app.get('/celebration', (req, res) => {
   }
 });
 
+// Trigger celebration manually
+app.post('/celebration/trigger', (req, res) => {
+  celebrationTrigger = true;
+  res.status(200).json({ triggered: true });
+});
+
+// Check and reset celebration trigger
+app.get('/celebration/trigger', (req, res) => {
+  const wasTriggered = celebrationTrigger;
+  celebrationTrigger = false;
+  res.status(200).json({ triggered: wasTriggered });
+});
+
 // Get all slides
 app.get('/slides', (req, res) => {
   try {
@@ -179,7 +194,7 @@ app.delete('/slides', (req, res) => {
   }
 });
 
-// ✅ Edit a slide (full style support)
+// Edit a slide (full style support)
 app.put('/slide/:index', (req, res) => {
   try {
     const index = parseInt(req.params.index, 10);
