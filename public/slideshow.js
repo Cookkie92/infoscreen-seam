@@ -257,6 +257,18 @@ function nextSlide() {
   updateSlide();
 }
 
+// Auto-refresh every 60 minutes (60 * 60 * 1000 ms)
+setTimeout(() => {
+  window.location.reload();
+}, 60 * 60 * 1000);
+
+
+// Temporary auto-refresh every 5 seconds for testing
+// setTimeout(() => {
+//   window.location.reload();
+// }, 5000); // 5 seconds = 5000 ms
+
+
 function updateClock() {
   const now = new Date();
   const time = now.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' });
