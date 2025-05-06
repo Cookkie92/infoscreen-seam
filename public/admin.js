@@ -1,8 +1,10 @@
-// ✅ admin.js with header & text style support and labels
+// ✅ admin.js with full slide + celebration support
 const form = document.getElementById('uploadForm');
 const status = document.getElementById('status');
 const slideList = document.getElementById('slideList');
 const statsForm = document.getElementById('statsForm');
+const celebrationForm = document.getElementById('celebrationForm');
+const triggerCelebrationBtn = document.getElementById('triggerCelebrationBtn');
 
 // Handle slide upload
 form.addEventListener('submit', async (e) => {
@@ -44,6 +46,43 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
+// Handle celebration upload
+celebrationForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const image = document.getElementById('celebrationImage').files[0];
+  const sound = document.getElementById('celebrationSound').files[0];
+
+  if (!image) {
+    alert('Please select a celebration image.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('image', image);
+  if (sound) formData.append('sound', sound);
+
+  const res = await fetch('/celebration', {
+    method: 'POST',
+    body: formData
+  });
+
+  if (res.ok) {
+    showToast('🎉 Celebration uploaded!');
+    celebrationForm.reset();
+  } else {
+    alert('Failed to upload celebration.');
+  }
+});
+
+triggerCelebrationBtn.addEventListener('click', async () => {
+  const res = await fetch('/celebration/trigger', { method: 'POST' });
+  if (res.ok) {
+    showToast('🎉 Celebration triggered!');
+  } else {
+    alert('Failed to trigger celebration.');
+  }
+});
+
 // Toast function
 function showToast(message) {
   const toast = document.createElement('div');
@@ -51,19 +90,14 @@ function showToast(message) {
   toast.textContent = message;
   document.body.appendChild(toast);
 
-  setTimeout(() => {
-    toast.classList.add('show');
-  }, 100);
-
+  setTimeout(() => toast.classList.add('show'), 100);
   setTimeout(() => {
     toast.classList.remove('show');
-    setTimeout(() => {
-      document.body.removeChild(toast);
-    }, 500);
+    setTimeout(() => document.body.removeChild(toast), 500);
   }, 2500);
 }
 
-// Handle statistics update
+// Statistics update
 statsForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -88,7 +122,7 @@ statsForm.addEventListener('submit', async (e) => {
   const res = await fetch('/stats', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(stats),
+    body: JSON.stringify(stats)
   });
 
   if (res.ok) {
@@ -113,60 +147,54 @@ async function loadSlides() {
     img.src = slide.image;
     img.className = 'slide-img';
 
+    const headerLabel = document.createElement('label');
+    headerLabel.textContent = 'Header Text';
     const headerInput = document.createElement('input');
     headerInput.value = slide.header || '';
-    headerInput.placeholder = 'Edit header...';
     headerInput.className = 'slide-header-input';
 
-    const headerColorLabel = document.createElement('label');
-    headerColorLabel.className = 'setting-label';
-    headerColorLabel.textContent = 'Header Color';
+    const textLabel = document.createElement('label');
+    textLabel.textContent = 'Paragraph Text';
+    const textInput = document.createElement('textarea');
+    textInput.value = slide.text || '';
+    textInput.rows = 3;
+    textInput.className = 'slide-textarea';
 
+    const headerColorLabel = document.createElement('label');
+    headerColorLabel.textContent = 'Header Color';
     const headerColorInput = document.createElement('input');
     headerColorInput.type = 'color';
     headerColorInput.value = slide.headerColor || '#ffffff';
     headerColorInput.className = 'slide-color-input';
 
-    const headerFontLabel = document.createElement('label');
-    headerFontLabel.className = 'setting-label';
-    headerFontLabel.textContent = 'Header Font';
-
-    const headerFontSelect = document.createElement('select');
-    headerFontSelect.className = 'slide-font-select';
-    ['inherit', 'Arial', 'Georgia', 'Courier New', 'Times New Roman', 'Roboto', 'Lobster'].forEach(font => {
-      const opt = document.createElement('option');
-      opt.value = font;
-      opt.textContent = font;
-      if (font === slide.headerFont) opt.selected = true;
-      headerFontSelect.appendChild(opt);
-    });
-
-    const textInput = document.createElement('textarea');
-    textInput.value = slide.text || '';
-    textInput.placeholder = 'Edit paragraph text...';
-    textInput.rows = 3;
-    textInput.className = 'slide-textarea';
-
     const textColorLabel = document.createElement('label');
-    textColorLabel.className = 'setting-label';
-    textColorLabel.textContent = 'Text Color';
-
+    textColorLabel.textContent = 'Paragraph Color';
     const textColorInput = document.createElement('input');
     textColorInput.type = 'color';
     textColorInput.value = slide.textColor || '#ffffff';
     textColorInput.className = 'slide-color-input';
 
-    const textFontLabel = document.createElement('label');
-    textFontLabel.className = 'setting-label';
-    textFontLabel.textContent = 'Text Font';
+    const headerFontLabel = document.createElement('label');
+    headerFontLabel.textContent = 'Header Font';
+    const headerFontSelect = document.createElement('select');
+    headerFontSelect.className = 'slide-font-select';
+    ['inherit', 'Arial', 'Georgia', 'Courier New', 'Times New Roman', 'Roboto', 'Lobster', 'Source Sans 3'].forEach(font => {
+      const opt = document.createElement('option');
+      opt.value = font.includes(' ') ? `'${font}'` : font;
+      opt.textContent = font;
+      if (slide.headerFont === opt.value) opt.selected = true;
+      headerFontSelect.appendChild(opt);
+    });
 
+    const textFontLabel = document.createElement('label');
+    textFontLabel.textContent = 'Paragraph Font';
     const textFontSelect = document.createElement('select');
     textFontSelect.className = 'slide-font-select';
-    ['inherit', 'Arial', 'Georgia', 'Courier New', 'Times New Roman', 'Roboto', 'Lobster'].forEach(font => {
+    ['inherit', 'Arial', 'Georgia', 'Courier New', 'Times New Roman', 'Roboto', 'Lobster', 'Source Sans 3'].forEach(font => {
       const opt = document.createElement('option');
-      opt.value = font;
+      opt.value = font.includes(' ') ? `'${font}'` : font;
       opt.textContent = font;
-      if (font === slide.textFont) opt.selected = true;
+      if (slide.textFont === opt.value) opt.selected = true;
       textFontSelect.appendChild(opt);
     });
 
@@ -208,38 +236,27 @@ async function loadSlides() {
       }
     };
 
-    div.append(
-      img,
-      headerInput,
-      headerColorLabel,
-      headerColorInput,
-      headerFontLabel,
-      headerFontSelect,
-      textInput,
-      textColorLabel,
-      textColorInput,
-      textFontLabel,
-      textFontSelect,
-      saveButton,
-      previewButton,
-      deleteButton
-    );
+    div.appendChild(img);
+    div.appendChild(headerLabel);
+    div.appendChild(headerInput);
+    div.appendChild(headerColorLabel);
+    div.appendChild(headerColorInput);
+    div.appendChild(headerFontLabel);
+    div.appendChild(headerFontSelect);
+    div.appendChild(textLabel);
+    div.appendChild(textInput);
+    div.appendChild(textColorLabel);
+    div.appendChild(textColorInput);
+    div.appendChild(textFontLabel);
+    div.appendChild(textFontSelect);
+    div.appendChild(saveButton);
+    div.appendChild(previewButton);
+    div.appendChild(deleteButton);
 
     slideList.appendChild(div);
   });
 }
 
-// Live preview for selected fonts
-['headerFont', 'textFont'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) {
-    el.addEventListener('change', function () {
-      this.style.fontFamily = this.value;
-    });
-  }
-});
-
-// Delete all slides
 const deleteAllBtn = document.getElementById('deleteAllBtn');
 if (deleteAllBtn) {
   deleteAllBtn.addEventListener('click', async () => {
@@ -255,5 +272,4 @@ if (deleteAllBtn) {
   });
 }
 
-// Initial load
 loadSlides();

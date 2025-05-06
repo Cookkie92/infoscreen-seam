@@ -18,6 +18,7 @@ const uploadsDir = path.join(__dirname, 'uploads');
 const dataDir = path.join(__dirname, 'data');
 const slidesFile = path.join(dataDir, 'slides.json');
 const statsFile = path.join(dataDir, 'stats.json');
+const celebrationFile = path.join(dataDir, 'celebration.json');
 
 // Ensure folders/files exist
 fs.mkdirSync(uploadsDir, { recursive: true });
@@ -30,6 +31,9 @@ if (!fs.existsSync(statsFile)) {
     daysWithoutInjury: "0",
     reportingFrequency: "0%"
   }, null, 2));
+}
+if (!fs.existsSync(celebrationFile)) {
+  fs.writeFileSync(celebrationFile, JSON.stringify({ image: '', sound: '' }, null, 2));
 }
 
 // Configure Multer for file uploads
@@ -77,6 +81,47 @@ app.post('/upload', upload.single('image'), (req, res) => {
   }
 });
 
+// Upload celebration slide (image and sound)
+app.post('/celebration', upload.fields([
+  { name: 'celebrationImage', maxCount: 1 },
+  { name: 'celebrationSound', maxCount: 1 },
+]), (req, res) => {
+  try {
+    const celebrationData = {};
+
+    if (req.files.celebrationImage) {
+      celebrationData.image = `/uploads/${req.files.celebrationImage[0].filename}`;
+    }
+
+    if (req.files.celebrationSound) {
+      celebrationData.sound = `/uploads/${req.files.celebrationSound[0].filename}`;
+    }
+
+    const current = fs.existsSync(celebrationFile)
+      ? JSON.parse(fs.readFileSync(celebrationFile))
+      : {};
+
+    const updated = { ...current, ...celebrationData };
+    fs.writeFileSync(celebrationFile, JSON.stringify(updated, null, 2));
+
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Upload Celebration Error:', err);
+    res.status(500).json({ error: 'Failed to upload celebration slide.' });
+  }
+});
+
+// Get celebration slide
+app.get('/celebration', (req, res) => {
+  try {
+    const celebration = JSON.parse(fs.readFileSync(celebrationFile));
+    res.json(celebration);
+  } catch (err) {
+    console.error('Load Celebration Error:', err);
+    res.status(500).json({ error: 'Failed to load celebration.' });
+  }
+});
+
 // Get all slides
 app.get('/slides', (req, res) => {
   try {
@@ -118,7 +163,6 @@ app.delete('/slides', (req, res) => {
   try {
     const slides = JSON.parse(fs.readFileSync(slidesFile));
 
-    // Remove all uploaded images
     slides.forEach(slide => {
       const imagePath = path.join(__dirname, 'uploads', path.basename(slide.image));
       if (fs.existsSync(imagePath)) {
@@ -126,7 +170,6 @@ app.delete('/slides', (req, res) => {
       }
     });
 
-    // Clear the slides file
     fs.writeFileSync(slidesFile, '[]');
 
     res.json({ success: true });

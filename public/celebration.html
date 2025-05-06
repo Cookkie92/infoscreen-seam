@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Celebration</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      background-color: #001f3f;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .celebration-image {
+      max-width: 90vw;
+      max-height: 70vh;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+    }
+    .confetti {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .return-btn {
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #007bff;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <canvas class="confetti"></canvas>
+  <img id="celebrationImage" class="celebration-image" src="" alt="Celebration Image" />
+  <button class="return-btn" onclick="window.location.href='admin.html'">Back to Admin</button>
+
+  <audio id="celebrationSound" src="celebration.mp3"></audio>
+
+  <script>
+    async function loadCelebration() {
+      const res = await fetch('/celebration');
+      const data = await res.json();
+      document.getElementById('celebrationImage').src = data.image;
+      document.getElementById('celebrationSound').play();
+    }
+
+    loadCelebration();
+  </script>
+  <script src="confetti.min.js"></script>
+  <script>
+    confetti = confetti.create(document.querySelector('.confetti'), { resize: true });
+    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+  </script>
+</body>
+</html>

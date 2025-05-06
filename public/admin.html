@@ -58,6 +58,18 @@
       <p id="status"></p>
     </form>
 
+    <h1>Upload Celebration Slide</h1>
+    <form id="celebrationForm" enctype="multipart/form-data" class="admin-form">
+      <label for="celebrationImage">Celebration Image</label>
+      <input type="file" name="celebrationImage" id="celebrationImage" required>
+
+      <label for="celebrationSound">Celebration Sound (MP3)</label>
+      <input type="file" name="celebrationSound" id="celebrationSound" accept="audio/mpeg">
+
+      <button type="submit">Upload Celebration</button>
+      <button type="button" id="triggerCelebrationBtn">🎉 Trigger Celebration Now</button>
+    </form>
+
     <h1>Update Statistics</h1>
     <form id="statsForm" class="admin-form">
       <label for="sickLeaveInput">Sick Leave (%)</label>
