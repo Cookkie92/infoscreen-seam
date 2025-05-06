@@ -136,16 +136,25 @@ app.delete('/slides', (req, res) => {
   }
 });
 
-// Edit a slide (header and text)
+// ✅ Edit a slide (full style support)
 app.put('/slide/:index', (req, res) => {
   try {
     const index = parseInt(req.params.index, 10);
-    const { header, text } = req.body;
-    let slides = JSON.parse(fs.readFileSync(slidesFile));
+    const slides = JSON.parse(fs.readFileSync(slidesFile));
 
     if (index >= 0 && index < slides.length) {
-      slides[index].header = header ?? slides[index].header;
-      slides[index].text = text ?? slides[index].text;
+      const updated = req.body;
+
+      slides[index] = {
+        ...slides[index],
+        header: updated.header ?? slides[index].header,
+        text: updated.text ?? slides[index].text,
+        headerColor: updated.headerColor ?? slides[index].headerColor,
+        headerFont: updated.headerFont ?? slides[index].headerFont,
+        textColor: updated.textColor ?? slides[index].textColor,
+        textFont: updated.textFont ?? slides[index].textFont,
+      };
+
       fs.writeFileSync(slidesFile, JSON.stringify(slides, null, 2));
       res.json({ success: true });
     } else {
@@ -157,16 +166,11 @@ app.put('/slide/:index', (req, res) => {
   }
 });
 
-// Update statistics (partial allowed)
+// Update statistics
 app.post('/stats', (req, res) => {
   try {
     const currentStats = JSON.parse(fs.readFileSync(statsFile));
-
-    const updatedStats = {
-      ...currentStats,
-      ...req.body
-    };
-
+    const updatedStats = { ...currentStats, ...req.body };
     fs.writeFileSync(statsFile, JSON.stringify(updatedStats, null, 2));
     res.status(200).json({ success: true });
   } catch (err) {

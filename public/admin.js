@@ -1,4 +1,4 @@
-// ✅ admin.js with header & text style support
+// ✅ admin.js with header & text style support and labels
 const form = document.getElementById('uploadForm');
 const status = document.getElementById('status');
 const slideList = document.getElementById('slideList');
@@ -118,11 +118,57 @@ async function loadSlides() {
     headerInput.placeholder = 'Edit header...';
     headerInput.className = 'slide-header-input';
 
+    const headerColorLabel = document.createElement('label');
+    headerColorLabel.className = 'setting-label';
+    headerColorLabel.textContent = 'Header Color';
+
+    const headerColorInput = document.createElement('input');
+    headerColorInput.type = 'color';
+    headerColorInput.value = slide.headerColor || '#ffffff';
+    headerColorInput.className = 'slide-color-input';
+
+    const headerFontLabel = document.createElement('label');
+    headerFontLabel.className = 'setting-label';
+    headerFontLabel.textContent = 'Header Font';
+
+    const headerFontSelect = document.createElement('select');
+    headerFontSelect.className = 'slide-font-select';
+    ['inherit', 'Arial', 'Georgia', 'Courier New', 'Times New Roman', 'Roboto', 'Lobster'].forEach(font => {
+      const opt = document.createElement('option');
+      opt.value = font;
+      opt.textContent = font;
+      if (font === slide.headerFont) opt.selected = true;
+      headerFontSelect.appendChild(opt);
+    });
+
     const textInput = document.createElement('textarea');
     textInput.value = slide.text || '';
     textInput.placeholder = 'Edit paragraph text...';
     textInput.rows = 3;
     textInput.className = 'slide-textarea';
+
+    const textColorLabel = document.createElement('label');
+    textColorLabel.className = 'setting-label';
+    textColorLabel.textContent = 'Text Color';
+
+    const textColorInput = document.createElement('input');
+    textColorInput.type = 'color';
+    textColorInput.value = slide.textColor || '#ffffff';
+    textColorInput.className = 'slide-color-input';
+
+    const textFontLabel = document.createElement('label');
+    textFontLabel.className = 'setting-label';
+    textFontLabel.textContent = 'Text Font';
+
+    const textFontSelect = document.createElement('select');
+    textFontSelect.className = 'slide-font-select';
+    ['inherit', 'Arial', 'Georgia', 'Courier New', 'Times New Roman', 'Roboto', 'Lobster'].forEach(font => {
+      const opt = document.createElement('option');
+      opt.value = font;
+      opt.textContent = font;
+      if (font === slide.textFont) opt.selected = true;
+      textFontSelect.appendChild(opt);
+    });
 
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
@@ -130,7 +176,11 @@ async function loadSlides() {
     saveButton.onclick = async () => {
       const updated = {
         header: headerInput.value.trim(),
-        text: textInput.value.trim()
+        text: textInput.value.trim(),
+        headerColor: headerColorInput.value,
+        headerFont: headerFontSelect.value,
+        textColor: textColorInput.value,
+        textFont: textFontSelect.value
       };
       await fetch(`/slide/${index}`, {
         method: 'PUT',
@@ -158,24 +208,35 @@ async function loadSlides() {
       }
     };
 
-    div.appendChild(img);
-    div.appendChild(headerInput);
-    div.appendChild(textInput);
-    div.appendChild(saveButton);
-    div.appendChild(previewButton);
-    div.appendChild(deleteButton);
+    div.append(
+      img,
+      headerInput,
+      headerColorLabel,
+      headerColorInput,
+      headerFontLabel,
+      headerFontSelect,
+      textInput,
+      textColorLabel,
+      textColorInput,
+      textFontLabel,
+      textFontSelect,
+      saveButton,
+      previewButton,
+      deleteButton
+    );
 
     slideList.appendChild(div);
   });
 }
 
 // Live preview for selected fonts
-document.getElementById('headerFont').addEventListener('change', function () {
-  this.style.fontFamily = this.value;
-});
-
-document.getElementById('textFont').addEventListener('change', function () {
-  this.style.fontFamily = this.value;
+['headerFont', 'textFont'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('change', function () {
+      this.style.fontFamily = this.value;
+    });
+  }
 });
 
 // Delete all slides

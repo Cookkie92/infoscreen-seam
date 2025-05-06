@@ -63,7 +63,7 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-left: 2px solid #0056b3;
+  border-left: 2px solid #007acc;
   padding-left: 1.5rem;
 }
 
@@ -102,6 +102,7 @@ html, body {
 
 /* Bottom section */
 .bottom-section {
+  font-family:Arial, Helvetica, sans-serif;
   flex-shrink: 0;
   padding: 1rem 2rem;
   margin-top: 2rem;
@@ -241,6 +242,34 @@ button.delete-all-btn:hover {
   font-family: inherit;
   appearance: none;
 }
+
+.slide-font-select, .slide-color-input {
+  width: 50%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #0056b3;
+  background-color: #002b5c;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.slide-font-select {
+  font-family: inherit;
+}
+
+.slide-font-select option {
+  background-color: #003366;
+  color: white;
+}
+.setting-label {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #cce7ff;
+  display: block;
+}
+
 
 /* Make color pickers more visually distinct */
 .admin-form input[type="color"] {
