@@ -19,6 +19,7 @@ const dataDir = path.join(__dirname, 'data');
 const slidesFile = path.join(dataDir, 'slides.json');
 const statsFile = path.join(dataDir, 'stats.json');
 const celebrationFile = path.join(dataDir, 'celebration.json');
+const celebrationsFile = path.join(dataDir, 'celebrations.json');
 
 // Ensure folders/files exist
 fs.mkdirSync(uploadsDir, { recursive: true });
@@ -33,8 +34,9 @@ if (!fs.existsSync(statsFile)) {
   }, null, 2));
 }
 if (!fs.existsSync(celebrationFile)) {
-  fs.writeFileSync(celebrationFile, JSON.stringify({ image: '', sound: '' }, null, 2));
+  fs.writeFileSync(celebrationFile, JSON.stringify({ image: '', sound: '', heading: '' }, null, 2));
 }
+if (!fs.existsSync(celebrationsFile)) fs.writeFileSync(celebrationsFile, '[]');
 
 let celebrationTrigger = false;
 
@@ -83,54 +85,81 @@ app.post('/upload', upload.single('image'), (req, res) => {
   }
 });
 
-// Upload celebration slide (image and sound)
-app.post('/celebration', upload.fields([
-  { name: 'celebrationImage', maxCount: 1 },
-  { name: 'celebrationSound', maxCount: 1 },
-]), (req, res) => {
+// Upload new celebration
+app.post('/celebrations', upload.any(), (req, res) => {
   try {
     const celebrationData = {};
 
-    if (req.files.celebrationImage) {
-      celebrationData.image = `/uploads/${req.files.celebrationImage[0].filename}`;
+    for (const file of req.files) {
+      if (file.fieldname === 'celebrationImage') {
+        celebrationData.image = `/uploads/${file.filename}`;
+      }
+      if (file.fieldname === 'celebrationSound') {
+        celebrationData.sound = `/uploads/${file.filename}`;
+      }
     }
 
-    if (req.files.celebrationSound) {
-      celebrationData.sound = `/uploads/${req.files.celebrationSound[0].filename}`;
+    if (req.body.celebrationHeading) {
+      celebrationData.heading = req.body.celebrationHeading;
     }
 
-    const current = fs.existsSync(celebrationFile)
-      ? JSON.parse(fs.readFileSync(celebrationFile))
-      : {};
-
-    const updated = { ...current, ...celebrationData };
-    fs.writeFileSync(celebrationFile, JSON.stringify(updated, null, 2));
+    const celebrations = JSON.parse(fs.readFileSync(celebrationsFile));
+    celebrations.push(celebrationData);
+    fs.writeFileSync(celebrationsFile, JSON.stringify(celebrations, null, 2));
 
     res.status(200).json({ success: true });
   } catch (err) {
     console.error('Upload Celebration Error:', err);
-    res.status(500).json({ error: 'Failed to upload celebration slide.' });
+    res.status(500).json({ error: 'Failed to upload celebration.' });
   }
 });
 
-// Get celebration slide
-app.get('/celebration', (req, res) => {
+// Get all celebrations
+app.get('/celebrations', (req, res) => {
   try {
-    const celebration = JSON.parse(fs.readFileSync(celebrationFile));
-    res.json(celebration);
+    const celebrations = JSON.parse(fs.readFileSync(celebrationsFile));
+    res.json(celebrations);
   } catch (err) {
-    console.error('Load Celebration Error:', err);
-    res.status(500).json({ error: 'Failed to load celebration.' });
+    console.error('Load Celebrations Error:', err);
+    res.status(500).json({ error: 'Failed to load celebrations.' });
   }
 });
 
-// Trigger celebration manually
+// Delete celebration by index
+app.delete('/celebration/:index', (req, res) => {
+  try {
+    const index = parseInt(req.params.index, 10);
+    const celebrations = JSON.parse(fs.readFileSync(celebrationsFile));
+
+    if (index >= 0 && index < celebrations.length) {
+      const removed = celebrations.splice(index, 1)[0];
+      fs.writeFileSync(celebrationsFile, JSON.stringify(celebrations, null, 2));
+
+      if (removed.image) {
+        const imagePath = path.join(__dirname, 'uploads', path.basename(removed.image));
+        if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+      }
+      if (removed.sound) {
+        const soundPath = path.join(__dirname, 'uploads', path.basename(removed.sound));
+        if (fs.existsSync(soundPath)) fs.unlinkSync(soundPath);
+      }
+
+      res.status(200).json({ success: true });
+    } else {
+      res.status(400).json({ error: 'Invalid celebration index' });
+    }
+  } catch (err) {
+    console.error('Delete Celebration Error:', err);
+    res.status(500).json({ error: 'Failed to delete celebration.' });
+  }
+});
+
+// Restore celebration trigger endpoint
 app.post('/celebration/trigger', (req, res) => {
   celebrationTrigger = true;
   res.status(200).json({ triggered: true });
 });
 
-// Check and reset celebration trigger
 app.get('/celebration/trigger', (req, res) => {
   const wasTriggered = celebrationTrigger;
   celebrationTrigger = false;
@@ -194,7 +223,7 @@ app.delete('/slides', (req, res) => {
   }
 });
 
-// Edit a slide (full style support)
+// Edit a slide
 app.put('/slide/:index', (req, res) => {
   try {
     const index = parseInt(req.params.index, 10);

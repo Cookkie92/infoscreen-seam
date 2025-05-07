@@ -66,9 +66,16 @@
       <label for="celebrationSound">Celebration Sound (MP3)</label>
       <input type="file" name="celebrationSound" id="celebrationSound" accept="audio/mpeg">
 
+      <label for="celebrationHeading">Celebration Heading</label>
+      <input type="text" id="celebrationHeading" name="celebrationHeading" placeholder="e.g. 🎉 Great Job, Team!">
+
       <button type="submit">Upload Celebration</button>
       <button type="button" id="triggerCelebrationBtn">🎉 Trigger Celebration Now</button>
     </form>
+
+    <!-- ✅ New section to list and delete existing celebrations -->
+    <h2>Existing Celebrations</h2>
+    <ul id="celebrationList" class="celebration-list"></ul>
 
     <h1>Update Statistics</h1>
     <form id="statsForm" class="admin-form">

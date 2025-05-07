@@ -1,4 +1,4 @@
-// ✅ admin.js with full slide + celebration support (fixed field names)
+// ✅ admin.js with merged full slide + multi-celebration support
 const form = document.getElementById('uploadForm');
 const status = document.getElementById('status');
 const slideList = document.getElementById('slideList');
@@ -46,11 +46,12 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// ✅ Fixed field names for celebration upload
+// Upload celebration with heading
 celebrationForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const image = document.getElementById('celebrationImage').files[0];
   const sound = document.getElementById('celebrationSound').files[0];
+  const heading = document.getElementById('celebrationHeading')?.value.trim();
 
   if (!image) {
     alert('Please select a celebration image.');
@@ -60,8 +61,9 @@ celebrationForm.addEventListener('submit', async (e) => {
   const formData = new FormData();
   formData.append('celebrationImage', image);
   if (sound) formData.append('celebrationSound', sound);
+  if (heading) formData.append('celebrationHeading', heading);
 
-  const res = await fetch('/celebration', {
+  const res = await fetch('/celebrations', {
     method: 'POST',
     body: formData
   });
@@ -69,6 +71,7 @@ celebrationForm.addEventListener('submit', async (e) => {
   if (res.ok) {
     showToast('🎉 Celebration uploaded!');
     celebrationForm.reset();
+    loadCelebrations();
   } else {
     alert('Failed to upload celebration.');
   }
@@ -83,7 +86,6 @@ triggerCelebrationBtn.addEventListener('click', async () => {
   }
 });
 
-// Toast function
 function showToast(message) {
   const toast = document.createElement('div');
   toast.className = 'toast';
@@ -132,6 +134,34 @@ statsForm.addEventListener('submit', async (e) => {
     alert('Failed to update statistics.');
   }
 });
+
+// Load existing celebration entries
+async function loadCelebrations() {
+  const container = document.getElementById('celebrationList');
+  if (!container) return;
+
+  const res = await fetch('/celebrations');
+  const list = await res.json();
+  container.innerHTML = '';
+
+  list.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'celebration-item';
+    div.textContent = c.heading || c.image?.split('/').pop() || `Celebration ${i + 1}`;
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '❌ Delete';
+    deleteBtn.onclick = async () => {
+      if (confirm('Delete this celebration?')) {
+        await fetch(`/celebration/${i}`, { method: 'DELETE' });
+        loadCelebrations();
+      }
+    };
+
+    div.appendChild(deleteBtn);
+    container.appendChild(div);
+  });
+}
 
 // Load existing slides
 async function loadSlides() {
@@ -273,3 +303,4 @@ if (deleteAllBtn) {
 }
 
 loadSlides();
+loadCelebrations();
