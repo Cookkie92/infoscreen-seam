@@ -16,7 +16,11 @@ async function loadStats() {
   const stats = await res.json();
 
   const lastStats = JSON.parse(localStorage.getItem('lastStats')) || {};
-  const prevStats = JSON.parse(localStorage.getItem('prevStats')) || {};
+  const prevStats = JSON.parse(localStorage.getItem('prevStats')) || {
+    sickLeave: stats.sickLeave,
+    daysWithoutInjury: stats.daysWithoutInjury,
+    reportingFrequency: stats.reportingFrequency
+  };
 
   if (
     stats.sickLeave !== lastStats.sickLeave ||
@@ -119,10 +123,10 @@ function nextSlide() {
   updateSlide();
 }
 
-// Auto-refresh every 60 minutes
+// Auto-refresh every 10 minutes
 setTimeout(() => {
   window.location.reload();
-}, 60 * 60 * 1000);
+}, 10 * 60 * 1000);
 
 // Update date/time
 function updateClock() {
@@ -137,13 +141,12 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
-
 loadSlides();
 
-// 🔁 Auto celebration every 20 minutes
+// 🔁 Auto celebration every 2 minutes
 setInterval(() => {
   window.location.href = '/celebration.html';
-}, 20 * 60 * 1000);
+}, 2 * 60 * 1000);
 
 // 🎯 Admin-triggered celebration poll
 async function checkCelebrationTrigger() {
