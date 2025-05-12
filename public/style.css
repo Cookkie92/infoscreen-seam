@@ -22,6 +22,10 @@ html, body {
   z-index: 2; /* Always above background */
 }
 
+body.infoscreen-page {
+  overflow: hidden;
+}
+
 /* Top section layout */
 .top-section {
   flex: 1;
@@ -65,6 +69,7 @@ html, body {
   justify-content: center;
   border-left: 2px solid #007acc;
   padding-left: 1.5rem;
+  overflow:hidden;
 }
 
 .text-wrapper h1 {
