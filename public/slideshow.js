@@ -1,39 +1,55 @@
-// slideshow.js
 let current = 0;
 let slides = [];
 
 async function loadSlides() {
-  const res = await fetch('/slides');
-  slides = await res.json();
+  try {
+    const res = await fetch('/slides');
+    slides = await res.json();
+  } catch (err) {
+    console.error("Failed to load slides:", err);
+    slides = [];
+  }
 
   await loadStats();
   updateSlide();
   setInterval(nextSlide, 12000);
 }
 
-async function loadStats() {
-  const res = await fetch('/stats');
-  const stats = await res.json();
-
-  const lastStats = JSON.parse(localStorage.getItem('lastStats')) || {};
-  const prevStats = JSON.parse(localStorage.getItem('prevStats')) || {
-    sickLeave: stats.sickLeave,
-    daysWithoutInjury: stats.daysWithoutInjury,
-    reportingFrequency: stats.reportingFrequency
-  };
-
-  if (
-    stats.sickLeave !== lastStats.sickLeave ||
-    stats.daysWithoutInjury !== lastStats.daysWithoutInjury ||
-    stats.reportingFrequency !== lastStats.reportingFrequency
-  ) {
-    localStorage.setItem('prevStats', JSON.stringify(lastStats));
+// Fallback: reload if no slides load after 5 seconds
+setTimeout(() => {
+  if (!slides.length || !document.getElementById('slide-image').src) {
+    console.warn("No slides loaded, reloading page...");
+    location.reload();
   }
-  localStorage.setItem('lastStats', JSON.stringify(stats));
+}, 5000);
 
-  updateStatDisplay('sick-leave', stats.sickLeave, prevStats.sickLeave, 'down');
-  updateStatDisplay('days-without-injury', stats.daysWithoutInjury, prevStats.daysWithoutInjury, 'smiley');
-  updateStatDisplay('reporting-frequency', stats.reportingFrequency, prevStats.reportingFrequency, 'up');
+async function loadStats() {
+  try {
+    const res = await fetch('/stats');
+    const stats = await res.json();
+
+    const lastStats = JSON.parse(localStorage.getItem('lastStats')) || {};
+    const prevStats = JSON.parse(localStorage.getItem('prevStats')) || {
+      sickLeave: stats.sickLeave,
+      daysWithoutInjury: stats.daysWithoutInjury,
+      reportingFrequency: stats.reportingFrequency
+    };
+
+    if (
+      stats.sickLeave !== lastStats.sickLeave ||
+      stats.daysWithoutInjury !== lastStats.daysWithoutInjury ||
+      stats.reportingFrequency !== lastStats.reportingFrequency
+    ) {
+      localStorage.setItem('prevStats', JSON.stringify(lastStats));
+    }
+    localStorage.setItem('lastStats', JSON.stringify(stats));
+
+    updateStatDisplay('sick-leave', stats.sickLeave, prevStats.sickLeave, 'down');
+    updateStatDisplay('days-without-injury', stats.daysWithoutInjury, prevStats.daysWithoutInjury, 'smiley');
+    updateStatDisplay('reporting-frequency', stats.reportingFrequency, prevStats.reportingFrequency, 'up');
+  } catch (err) {
+    console.error("Failed to load stats:", err);
+  }
 }
 
 function updateStatDisplay(id, currentValue, prevValue, type) {
@@ -82,6 +98,9 @@ function updateSlide() {
   const paragraph = document.getElementById('slide-paragraph');
   const textWrapper = document.querySelector('.text-wrapper');
   const topSection = document.querySelector('.top-section');
+
+  // Hide loading message
+  document.getElementById('loadingMessage')?.remove();
 
   image.classList.add('fade-out');
   heading.classList.add('fade-out');

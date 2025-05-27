@@ -14,15 +14,30 @@
   <!-- Only ONE background container (background.js will fill it) -->
   <div class="background-circles"></div>
 
+  <!-- Loading message -->
+  <div id="loadingMessage" style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    z-index: 1000;
+  ">
+    Laster inn...
+  </div>
+
   <div class="main-container">
     <div class="top-section">
       <div class="image-wrapper">
-        <img id="slide-image" src="" alt="Slide" />
+        <!-- Fallback image for when slideshow.js hasn't loaded yet -->
+        <img id="slide-image" src="/default-slide.jpg" alt="Slide" />
       </div>
       
-      <div class="text-wrapper">
-        <h1 id="slide-heading">Heading here</h1>
-        <p id="slide-paragraph">Paragraph text goes here...</p>
+      <div class="text-wrapper" style="display: none;">
+        <h1 id="slide-heading"></h1>
+        <p id="slide-paragraph"></p>
       </div>
     </div>
 
@@ -44,7 +59,6 @@
         </div>
       </div>
     </div>
-    
   </div>
 </body>
 </html>
