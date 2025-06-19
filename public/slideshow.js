@@ -167,13 +167,28 @@ setInterval(() => {
   window.location.href = '/celebration.html';
 }, 2 * 60 * 1000);
 
-// 🎯 Admin-triggered celebration poll
+// 🎯 Admin-triggered celebration poll (robust version)
 async function checkCelebrationTrigger() {
   try {
     const res = await fetch('/celebration/trigger');
     const data = await res.json();
     if (data.triggered) {
-      window.location.href = '/celebration.html';
+      // Check if there is at least one valid celebration with an image
+      const celebrationsRes = await fetch('/celebrations');
+      const celebrations = await celebrationsRes.json();
+
+      if (celebrations.length > 0) {
+        const latestCelebration = celebrations[celebrations.length - 1];
+        if (latestCelebration.image && latestCelebration.image.trim() !== '') {
+          // There is valid celebration data -> go to celebration screen
+          window.location.href = '/celebration.html';
+          return;
+        } else {
+          console.warn("Trigger received but no valid celebration image found. Ignoring trigger.");
+        }
+      } else {
+        console.warn("Trigger received but no celebrations exist. Ignoring trigger.");
+      }
     }
   } catch (err) {
     console.error("Celebration trigger check failed", err);
