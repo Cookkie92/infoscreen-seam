@@ -26,12 +26,11 @@
     }
 
     .celebration-heading {
-    
       font-size: 3rem;
       text-align: center;
       margin-bottom: 20px;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
-      font-family:Arial, Helvetica, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       font-weight: bold;
     }
 
@@ -58,8 +57,11 @@
         const res = await fetch('/celebrations');
         celebrations = await res.json();
 
+        // Filter out celebrations without a valid image
+        celebrations = celebrations.filter(c => c.image && c.image.trim() !== '');
+
         if (celebrations.length === 0) {
-          throw new Error('No celebrations found');
+          throw new Error('No valid celebrations with images found');
         }
 
         showCelebration();
@@ -82,6 +84,8 @@
         }, 30000); // Exit after 30s
       } catch (err) {
         console.error('Celebration failed:', err);
+        // If error or no valid celebration, return to slides
+        window.location.href = '/index.html';
       }
     }
 
