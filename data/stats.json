@@ -1,5 +1,5 @@
 {
-  "sickLeave": "1,5%",
-  "daysWithoutInjury": "50",
-  "reportingFrequency": "1700"
+  "sickLeave": "1.2%",
+  "daysWithoutInjury": "80",
+  "reportingFrequency": "1900"
 }
