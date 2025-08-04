@@ -1,16 +1,6 @@
 let current = 0;
 let slides = [];
 
-// Sikre at iframe aldri skjules
-setInterval(() => {
-  const iframe = document.getElementById('grafana-iframe');
-  if (iframe) {
-    iframe.style.display = 'block';
-    iframe.style.visibility = 'visible';
-  }
-}, 1000);
-
-
 async function loadSlides() {
   try {
     const res = await fetch('/slides');
@@ -26,12 +16,13 @@ async function loadSlides() {
 }
 
 // Fallback: reload if no slides load after 5 seconds
-setTimeout(() => {
-  if (!slides.length || !document.getElementById('slide-image').src) {
-    console.warn("No slides loaded, reloading page...");
-    location.reload();
-  }
-}, 5000);
+// Fallback disabled to prevent iframe disappearance
+// setTimeout(() => {
+//   if (!slides.length || !document.getElementById('slide-image').src) {
+//     console.warn("No slides loaded, reloading page...");
+//     location.reload();
+//   }
+// }, 5000);
 
 async function loadStats() {
   try {
@@ -173,9 +164,10 @@ updateClock();
 loadSlides();
 
 // 🔁 Auto celebration every 2 minutes
-setInterval(() => {
-  window.location.href = '/celebration.html';
-}, 2 * 60 * 1000);
+// Disabled auto celebration redirect
+// setInterval(() => {
+//   window.location.href = '/celebration.html';
+// }, 2 * 60 * 1000);
 
 // 🎯 Admin-triggered celebration poll (robust version)
 async function checkCelebrationTrigger() {
