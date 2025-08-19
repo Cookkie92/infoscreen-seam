@@ -643,26 +643,95 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ---------- Celebration trigger ----------
+function normalizeCelebrations(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map(c => {
+      const image = c.image || c.imageUrl || c.url || c.photo || c.picture || '';
+      const heading = c.heading || c.title || c.text || c.name || '';
+      return { image: (image || '').toString().trim(), heading: (heading || '').toString().trim() };
+    })
+    .filter(c => c.image !== '');
+}
+
+async function hasValidCelebration() {
+  try {
+    const u = new URL('/celebrations', location.origin);
+    u.searchParams.set('_t', Date.now().toString());
+    const res = await fetch(u, { cache: 'no-store' });
+    if (!res.ok) {
+      console.warn('[celebration] /celebrations HTTP', res.status);
+      return false;
+    }
+    const data = await res.json();
+    const list = normalizeCelebrations(data);
+    console.log('[celebration] celebrations:', list);
+    return list.length > 0;
+  } catch (e) {
+    console.error('[celebration] hasValidCelebration error', e);
+    return false;
+  }
+}
+
 async function checkCelebrationTrigger() {
   try {
-    const res = await fetch('/celebration/trigger', { cache: 'no-store' });
+    const u = new URL('/celebration/trigger', location.origin);
+    u.searchParams.set('_t', Date.now().toString());
+    const res = await fetch(u, { cache: 'no-store' });
+    if (!res.ok) {
+      console.warn('[celebration] trigger HTTP', res.status);
+      return;
+    }
     const data = await res.json();
+    console.log('[celebration] trigger payload:', data);
 
     if (data && data.triggered) {
-      // Valider at det faktisk finnes noe å vise før vi går til celebration
+      console.log('[celebration] trigger detected, validating list…');
       const ok = await hasValidCelebration();
       if (ok) {
+        console.log('[celebration] redirecting → /celebration.html');
         window.location.href = '/celebration.html';
       } else {
-        console.warn('Trigger set, but no valid celebrations with images found.');
+        console.warn('[celebration] trigger set, but no valid celebrations with images found.');
       }
     }
   } catch (err) {
-    console.error('Celebration trigger check failed', err);
+    console.error('[celebration] trigger check failed', err);
   }
 }
-// Poll hvert 5. sekund
+
+// Kjør med én gang ved load
+checkCelebrationTrigger();
+
+// Test-poll hvert 1000 ms (sett tilbake til 5000 når ferdig å teste)
 setInterval(checkCelebrationTrigger, 1000);
+
+// Sjekk også når fanen får fokus (etter du trykker i admin)
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) checkCelebrationTrigger();
+});
+window.addEventListener('focus', checkCelebrationTrigger);
+
+// Manuell tvangstest: ?celebrate=1 i URL eller tast "C"
+(function maybeForceCelebrate() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('celebrate') === '1') {
+    hasValidCelebration().then(ok => {
+      if (ok) window.location.href = '/celebration.html';
+      else console.warn('[celebration] ?celebrate=1 satt, men ingen gyldige celebrations.');
+    });
+  }
+})();
+window.addEventListener('keydown', (e) => {
+  if (e.key.toLowerCase() === 'c') {
+    hasValidCelebration().then(ok => {
+      if (ok) window.location.href = '/celebration.html';
+      else console.warn('[celebration] C-trykk, men ingen gyldige celebrations.');
+    });
+  }
+});
+
+
 
 // ---------- Start ----------
 loadSlides();
