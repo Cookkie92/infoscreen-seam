@@ -48,30 +48,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
-  // ===== DEBUG OVERLAY =====
-  (function debugOverlay(){
-    const box = document.createElement('div');
-    box.id = 'celebration-debug';
-    box.style.cssText = 'position:fixed;top:8px;left:8px;background:rgba(0,0,0,.6);color:#0f0;font:12px/1.4 monospace;padding:8px 10px;border-radius:6px;z-index:99999;max-width:40vw;white-space:pre-wrap;';
-    box.textContent = '[boot] celebration script started';
-    document.body.appendChild(box);
-    window.__dbg = (msg, obj) => {
-      try {
-        box.textContent += '\n' + msg + (obj !== undefined ? ' ' + JSON.stringify(obj) : '');
-      } catch {
-        box.textContent += '\n' + msg + ' [unserializable]';
-      }
-      console.log(msg, obj ?? '');
-    };
-  })();
-
-  window.addEventListener('error', (e) => {
-    __dbg('[window.onerror]', { message: e.message, lineno: e.lineno, colno: e.colno });
-  });
-  window.addEventListener('unhandledrejection', (e) => {
-    __dbg('[unhandledrejection]', { reason: (e.reason && e.reason.message) || String(e.reason) });
-  });
-
   let celebrations = [];
   let currentIndex = 0;
   let confettiInterval;
@@ -86,15 +62,12 @@
   }
 
   function normalizeCelebrations(raw) {
-    __dbg('[normalize] raw length', Array.isArray(raw) ? raw.length : -1);
     if (!Array.isArray(raw)) return [];
-    const list = raw.map(c => {
+    return raw.map(c => {
       const image = c.image || c.imageUrl || c.url || c.photo || c.picture || '';
       const heading = c.heading || c.title || c.text || c.name || '';
       return { image: (image || '').toString().trim(), heading: (heading || '').toString().trim() };
     }).filter(c => c.image !== '');
-    __dbg('[normalize] normalized length', list.length);
-    return list;
   }
 
   function probeImage(src, timeoutMs = 5000) {
@@ -102,37 +75,31 @@
       const img = new Image();
       let done = false;
       const finish = ok => { if (!done) { done = true; resolve(ok); } };
-      const t = setTimeout(() => { __dbg('[probe] timeout', src); finish(false); }, timeoutMs);
+      const t = setTimeout(() => finish(false), timeoutMs);
 
-      img.onload = () => { clearTimeout(t); __dbg('[probe] ok', src); finish(true); };
-      img.onerror = () => { clearTimeout(t); __dbg('[probe] error', src); finish(false); };
+      img.onload = () => { clearTimeout(t); finish(true); };
+      img.onerror = () => { clearTimeout(t); finish(false); };
 
       const url = new URL(resolveUrlMaybeRelative(src));
       url.searchParams.set('_t', Date.now().toString());
       img.src = url.href;
-      __dbg('[probe] start', url.href);
     });
   }
 
   async function loadCelebrations() {
-    __dbg('[load] fetching /celebrations');
     const url = new URL('/celebrations', location.origin);
     url.searchParams.set('_t', Date.now().toString());
     const res = await fetch(url, { cache: 'no-store' });
-    __dbg('[load] http status', res.status);
     const data = await res.json();
-    __dbg('[load] raw data', data);
 
     let list = normalizeCelebrations(data);
     if (!list.length) throw new Error('No celebrations with an image-like field');
 
-    __dbg('[load] probing images...');
     const checks = await Promise.all(list.map(c => probeImage(c.image)));
     list = list.filter((_, i) => checks[i]);
 
     if (!list.length) throw new Error('No celebrations passed image load check');
     celebrations = list;
-    __dbg('[load] celebrations ready', celebrations);
   }
 
   function showCelebration() {
@@ -145,7 +112,6 @@
 
     imgEl.src = url.href;
     h1El.textContent = heading || '🎉 Celebration!';
-    __dbg('[show] index=' + currentIndex, { image: url.href, heading: h1El.textContent });
   }
 
   function nextCelebration() {
@@ -161,15 +127,12 @@
         origin: { x: Math.random(), y: Math.random() * 0.6 },
       });
     }, CONFETTI_EVERY_MS);
-    __dbg('[confetti] started');
   }
 
   function safeExit() {
     clearInterval(confettiInterval);
     clearInterval(rotateInterval);
     document.body.classList.add('fade-out');
-
-    __dbg('[exit] returning to index');
 
     setTimeout(() => {
       const back = document.referrer && new URL(document.referrer).origin === location.origin
@@ -183,16 +146,13 @@
   }
 
   async function boot() {
-    __dbg('[boot] start');
     try {
       await loadCelebrations();
       showCelebration();
       startConfetti();
       rotateInterval = setInterval(nextCelebration, ROTATE_EVERY_MS);
       setTimeout(safeExit, EXIT_AFTER_MS);
-      __dbg('[boot] ready');
     } catch (err) {
-      __dbg('[boot] error', { message: err.message });
       console.error('Celebration failed:', err);
       window.location.href = '/';
     }
@@ -204,6 +164,7 @@
 
   boot();
 </script>
+
 
 
 </body>

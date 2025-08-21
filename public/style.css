@@ -62,14 +62,13 @@ body.infoscreen-page {
   border-radius: 8px;
 }
 
-/* Text styles */
-.text-wrapper {
+
+/* .text-wrapper {
   flex: 3;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-left: 2px solid #007acc;
-  padding-left: 1.5rem;
+  padding-left: 0.5rem;
   overflow:hidden;
 }
 
@@ -80,7 +79,7 @@ body.infoscreen-page {
   line-height: 1.1;
   color: #ffffff;
   margin: 0 0 1rem 0;
-  text-align: center;
+  text-align: left;
 }
 .text-wrapper h1 {
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
@@ -91,7 +90,7 @@ body.infoscreen-page {
   display: block;
   width: 200px;
   height: 4px;
-  margin: 0.5rem auto 0;
+  margin: 0.5rem 0 0;
   background: #007bff;
   border-radius: 2px;
   opacity:0.2;
@@ -102,8 +101,48 @@ body.infoscreen-page {
   font-size: 1.25rem;
   line-height: 1.6;
   margin: 0 0 1rem 0;
-  text-align: center;
+  text-align: left;
+} */
+
+.text-wrapper {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* current padding-left is quite big */
+  padding-left: 0.5rem;   /* smaller nudge instead of 1.5rem */
+  overflow: hidden;
 }
+
+.text-wrapper h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  color: #ffffff;
+  margin: 0 0 1rem 0;
+  text-align: left;  /* <-- changed from center to left */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.text-wrapper h1::after {
+  content: '';
+  display: block;
+  width: 200px;
+  height: 4px;
+  margin: 0.5rem 0 0; /* left-aligned underline */
+  background: #007bff;
+  border-radius: 2px;
+  opacity: 0.2;
+}
+
+.text-wrapper p {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  text-align: left; /* <-- also left aligned */
+}
+
 
 
 /* ============================
@@ -161,7 +200,7 @@ body.infoscreen-page {
 /* 📘 Tittel (venstre side i boksen) */
 .stat-box p {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 2rem;
   font-weight: 600;
   color: #cbd5e1; /* Myk lys gråblå */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -187,18 +226,22 @@ body.infoscreen-page {
   flex-direction: column;
   background-color: #111;
   border-radius: 10px;
-  overflow: hidden;
-  min-height: 400px;     /* Ensure height is enough */
+  overflow: hidden;             /* needed to crop */
+  min-height: 400px;            /* Ensure height is enough */
   max-height: none;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;           /* allow iframe positioning */
 }
 
 .grafana-column iframe {
   flex: 1;
   width: 150%;
-  height: 100%;
+  height: 115%;                 /* make iframe taller */
   border: none;
   display: block;
+  position: absolute;           /* position inside container */
+  top: -15%;                    /* shift up by 15% */
+  left: 0;
 }
 
 
