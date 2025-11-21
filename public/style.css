@@ -77,47 +77,6 @@ body.infoscreen-page {
 }
 
 
-/* .text-wrapper {
-  flex: 3;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 0.5rem;
-  overflow:hidden;
-}
-
-.text-wrapper h1 {
-  font-size: 4rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-  line-height: 1.1;
-  color: #ffffff;
-  margin: 0 0 1rem 0;
-  text-align: left;
-}
-.text-wrapper h1 {
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.text-wrapper h1::after {
-  content: '';
-  display: block;
-  width: 200px;
-  height: 4px;
-  margin: 0.5rem 0 0;
-  background: #007bff;
-  border-radius: 2px;
-  opacity:0.2;
-}
-
-
-.text-wrapper p {
-  font-size: 1.25rem;
-  line-height: 1.6;
-  margin: 0 0 1rem 0;
-  text-align: left;
-} */
-
 /* slide text*/
 .text-wrapper {
   flex: 3;
@@ -501,6 +460,8 @@ button.delete-btn:hover {
   resize: vertical;
 }
 
+/*slideshow ?*/
+
 #slide-image.fade-out,
 #slide-heading.fade-out,
 #slide-paragraph.fade-out {
@@ -592,5 +553,448 @@ button.delete-btn:hover {
 
   .slide-item img {
     max-width: 100%;
+  }
+}
+
+
+/* ===================================================================== */
+/*                         ADMIN PANEL (admin.html)                      */
+/*   New scoped styles – only apply when body has class "admin-body"    */
+/* ===================================================================== */
+
+.admin-body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #0a2a5c 0, #000814 55%, #00040f 100%);
+  color: #f5f7ff;
+}
+
+/* Header / top bar */
+
+.admin-body .admin-header {
+  max-width: 1200px;
+  margin: 24px auto 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-body .admin-title {
+  margin: 0;
+  font-size: 1.9rem;
+  letter-spacing: 0.03em;
+}
+
+.admin-body .admin-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  color: #c2d9ff;
+}
+
+.admin-body .admin-header-right {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-body .admin-link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.25);
+  color: #e6f1ff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+
+.admin-body .admin-link-button:hover {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(144, 202, 249, 0.7);
+  transform: translateY(-1px);
+}
+
+/* Main container */
+
+.admin-body .admin-main {
+  padding: 0 16px 32px;
+}
+
+.admin-body .admin-container {
+  max-width: 1200px;
+  margin: 0 auto 32px auto;
+  padding: 24px;
+  background: rgba(0, 21, 51, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(100, 181, 246, 0.25);
+}
+
+/* Card layout */
+
+.admin-body .admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.admin-body .admin-card {
+  background: radial-gradient(circle at top left, #063970 0, #021529 60%);
+  border-radius: 16px;
+  padding: 20px 20px 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(56, 119, 197, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-body .admin-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0,
+    rgba(255, 255, 255, 0.04) 30%,
+    transparent 60%
+  );
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.admin-body .section-title {
+  font-size: 1.3rem;
+  margin: 0 0 4px;
+}
+
+.admin-body .section-description {
+  margin: 0 0 16px;
+  font-size: 0.9rem;
+  color: #c2d9ff;
+}
+
+.admin-body .subsection-title {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #e3f2fd;
+}
+
+/* Forms */
+
+.admin-body .admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 1; /* above the card gradient */
+}
+
+.admin-body .admin-form label {
+  margin-bottom: 2px;
+  font-weight: 600;
+  color: #e3f2fd;
+  font-size: 0.9rem;
+}
+
+.admin-body .admin-form input[type="text"],
+.admin-body .admin-form input[type="file"],
+.admin-body .admin-form textarea {
+  margin-bottom: 8px;
+  padding: 10px 11px;
+  border: 1px solid #0f4fb3;
+  border-radius: 10px;
+  background: rgba(0, 22, 55, 0.95);
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.admin-body .admin-form input::file-selector-button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #1976d2;
+  color: #fff;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.admin-body .admin-form textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.admin-body .admin-form input[type="color"],
+.admin-body .admin-form select {
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid #0f4fb3;
+  border-radius: 10px;
+  background: rgba(0, 22, 55, 0.95);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  appearance: none;
+}
+
+/* Form layout helpers */
+
+.admin-body .form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.admin-body .form-field {
+  flex: 1 1 0;
+  min-width: 140px;
+}
+
+.admin-body .button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* Buttons */
+
+.admin-body .admin-form button,
+.admin-body button.delete-all-btn,
+.admin-body button.save-btn,
+.admin-body button.preview-btn,
+.admin-body button.delete-btn {
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #1e88e5, #42a5f5);
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.18s ease, background 0.2s ease;
+}
+
+.admin-body .admin-form button:hover,
+.admin-body button.delete-all-btn:hover,
+.admin-body button.save-btn:hover,
+.admin-body button.preview-btn:hover,
+.admin-body button.delete-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.admin-body .btn-secondary {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.admin-body .btn-secondary:hover {
+  background: rgba(33, 150, 243, 0.25);
+}
+
+.admin-body .btn-accent {
+  background: linear-gradient(135deg, #ff9800, #ffc107);
+  color: #111;
+}
+
+/* Delete all button */
+
+.admin-body button.delete-all-btn {
+  background: linear-gradient(135deg, #e53935, #ff1744);
+  margin-top: 0;
+}
+
+/* Status text */
+
+.admin-body #status {
+  margin-top: 6px;
+  font-weight: 600;
+  color: #00e5a8;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+/* Celebration list */
+
+.admin-body .celebration-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.admin-body .celebration-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(9, 35, 80, 0.95);
+  border: 1px solid rgba(144, 202, 249, 0.4);
+  font-size: 0.9rem;
+}
+
+.admin-body .celebration-item button {
+  background: transparent;
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px solid rgba(244, 67, 54, 0.7);
+  color: #ff8a80;
+  font-size: 0.8rem;
+}
+
+/* Slide list grid */
+
+.admin-body .section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.admin-body .slide-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  padding: 8px 0;
+}
+
+
+.admin-body .slide-item {
+  background-color: rgba(0, 22, 55, 0.95);
+  border: 1px solid rgba(56, 119, 197, 0.7);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: none;
+  margin: 0;
+}
+
+.admin-body .slide-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+
+.admin-body .slide-header-input,
+.admin-body .slide-textarea {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 8px 9px;
+  border-radius: 8px;
+  border: 1px solid #0f4fb3;
+  background-color: #001b3d;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.admin-body .slide-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.admin-body .slide-font-select,
+.admin-body .slide-color-input {
+  width: 100%;
+  margin-top: 4px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid #0f4fb3;
+  background-color: #001b3d;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+/* Slide buttons */
+
+.admin-body button.save-btn {
+  background: linear-gradient(135deg, #43a047, #66bb6a);
+}
+
+.admin-body button.preview-btn {
+  background: linear-gradient(135deg, #1e88e5, #42a5f5);
+}
+
+.admin-body button.delete-btn {
+  background: linear-gradient(135deg, #e53935, #ff5252);
+}
+
+/* Toast for admin (scoped so it doesn't affect infoscreen) */
+
+.admin-body .toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(25, 118, 210, 0.95);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 9999;
+}
+
+.admin-body .toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive for admin */
+
+@media (max-width: 960px) {
+  .admin-body .admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-body .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-body .admin-header-right {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-body .admin-container {
+    padding: 16px;
+  }
+
+  .admin-body .section-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-body .button-row {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

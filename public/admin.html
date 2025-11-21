@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -73,7 +73,7 @@
       <button type="button" id="triggerCelebrationBtn">🎉 Trigger Celebration Now</button>
     </form>
 
-    <!-- ✅ New section to list and delete existing celebrations -->
+    ✅ New section to list and delete existing celebrations
     <h2>Existing Celebrations</h2>
     <ul id="celebrationList" class="celebration-list"></ul>
 
@@ -97,6 +97,187 @@
     <div id="slideList"></div>
   </div>
 
+  <script src="admin.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Infoscreen Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Lobster&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="admin-body">
+
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="admin-header-left">
+      <h1 class="admin-title">Infoscreen Admin</h1>
+      <p class="admin-subtitle">Manage slides, celebrations, and statistics.</p>
+    </div>
+
+    <div class="admin-header-right">
+      <a href="/index.html" target="_blank" class="admin-link-button">🔎 Open Infoscreen</a>
+      <a href="/infoscreenpreview.html" target="_blank" class="admin-link-button">🖼 Preview Slides</a>
+    </div>
+  </header>
+
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-container">
+
+      <!-- Slides + Celebration Grid -->
+      <div class="admin-grid">
+
+        <!-- Upload Slide -->
+        <section class="admin-card">
+          <h2 class="section-title">Upload New Slide</h2>
+          <p class="section-description">Choose an image and optionally add text and styling.</p>
+
+          <form id="uploadForm" enctype="multipart/form-data" class="admin-form">
+
+            <label>Image File</label>
+            <input type="file" id="image" name="image" required>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label>Header Color</label>
+                <input type="color" id="headerColor" name="headerColor" value="#ffffff">
+              </div>
+              <div class="form-field">
+                <label>Header Font</label>
+                <select id="headerFont">
+                  <option value="inherit">Default</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="'Roboto', sans-serif">Roboto</option>
+                  <option value="'Lobster', cursive">Lobster</option>
+                  <option value="'Source Sans 3', sans-serif">Source Sans 3</option>
+                </select>
+              </div>
+            </div>
+
+            <label>Slide Header</label>
+            <input type="text" id="headerInput" placeholder="e.g. Weekly Update">
+
+            <div class="form-row">
+              <div class="form-field">
+                <label>Text Color</label>
+                <input type="color" id="textColor" name="textColor" value="#ffffff">
+              </div>
+              <div class="form-field">
+                <label>Text Font</label>
+                <select id="textFont">
+                  <option value="inherit">Default</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="'Roboto', sans-serif">Roboto</option>
+                  <option value="'Lobster', cursive">Lobster</option>
+                  <option value="'Source Sans 3', sans-serif">Source Sans 3</option>
+                </select>
+              </div>
+            </div>
+
+            <label>Paragraph Text</label>
+            <textarea id="textInput" rows="4" placeholder="Enter slide text..."></textarea>
+
+            <div class="button-row">
+              <button type="submit">📤 Upload Slide</button>
+              <button type="button" class="btn-secondary" onclick="window.location.href='/infoscreenpreview.html'">🖼 Preview All Slides</button>
+            </div>
+
+            <p id="status"></p>
+          </form>
+        </section>
+
+
+        <!-- Upload Celebration -->
+        <section class="admin-card">
+          <h2 class="section-title">Celebrations</h2>
+          <p class="section-description">Upload celebration images and trigger events.</p>
+
+          <form id="celebrationForm" enctype="multipart/form-data" class="admin-form">
+
+            <label>Celebration Image</label>
+            <input type="file" id="celebrationImage" name="celebrationImage" required>
+
+            <label>Celebration Sound (MP3)</label>
+            <input type="file" id="celebrationSound" name="celebrationSound" accept="audio/mpeg">
+
+            <label>Celebration Heading</label>
+            <input type="text" id="celebrationHeading" name="celebrationHeading" placeholder="e.g. 🎉 Great Job!">
+
+            <div class="button-row">
+              <button type="submit">📤 Upload Celebration</button>
+              <button type="button" id="triggerCelebrationBtn" class="btn-accent">🎉 Trigger Now</button>
+            </div>
+          </form>
+
+          <h3 class="subsection-title">Existing Celebrations</h3>
+          <ul id="celebrationList" class="celebration-list"></ul>
+        </section>
+
+      </div> <!-- end grid -->
+
+
+      <!-- Statistics -->
+      <section class="admin-card">
+        <h2 class="section-title">Update Statistics</h2>
+        <p class="section-description">Shown next to the Grafana graphs on the infoscreen.</p>
+
+        <form id="statsForm" class="admin-form">
+          <div class="form-row">
+
+            <div class="form-field">
+              <label>Sick Leave (%)</label>
+              <input type="text" id="sickLeaveInput" placeholder="e.g. 3.2%">
+            </div>
+
+            <div class="form-field">
+              <label>Days Without Injury</label>
+              <input type="text" id="daysWithoutInjuryInput" placeholder="e.g. 42">
+            </div>
+
+            <div class="form-field">
+              <label>Reporting Frequency</label>
+              <input type="text" id="reportingFrequencyInput" placeholder="e.g. 72%">
+            </div>
+
+          </div>
+
+          <button type="submit">✅ Save Statistics</button>
+        </form>
+      </section>
+
+
+      <!-- Existing Slides -->
+      <section class="admin-card">
+
+        <div class="section-header-row">
+          <div>
+            <h2 class="section-title">Existing Slides</h2>
+            <p class="section-description">Edit, preview, or delete saved slides.</p>
+          </div>
+          <button id="deleteAllBtn" class="delete-all-btn">🗑 Delete All</button>
+        </div>
+
+        <div id="slideList" class="slide-list-grid"></div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Script -->
   <script src="admin.js"></script>
 </body>
 </html>

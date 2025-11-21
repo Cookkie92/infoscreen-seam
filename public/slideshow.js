@@ -253,79 +253,6 @@ async function hasValidCelebration() {
   }
 }
 
-// --- ADMIN TRIGGER POLLER (works with your existing /celebration/trigger) ---
-// async function checkCelebrationTrigger() {
-//   try {
-//     const u = new URL('/celebration/trigger', location.origin);
-//     u.searchParams.set('_t', Date.now().toString()); // cache-bust
-//     const res = await fetch(u, { cache: 'no-store' });
-//     if (!res.ok) return;
-
-//     const data = await res.json();
-//     console.log('[celebration] trigger payload:', data);
-
-//     if (data && data.triggered) {
-//       const ok = await hasValidCelebration();
-//       if (ok) redirectToCelebration('admin-trigger');
-//       else console.warn('[celebration] trigger set, but no valid celebrations with images found.');
-//     }
-//   } catch (err) {
-//     console.error('[celebration] trigger check failed', err);
-//   }
-// }
-
-// // Kick immediately + poll (set back to 5000 when done testing)
-// checkCelebrationTrigger();
-// setInterval(checkCelebrationTrigger, 1000);
-// document.addEventListener('visibilitychange', () => { if (!document.hidden) checkCelebrationTrigger(); });
-// window.addEventListener('focus', checkCelebrationTrigger);
-
-// // --- AUTO CELEBRATION EVERY 5 MINUTES ---
-// const AUTO_CELEB_MS = 5 * 60 * 1000;
-
-// // Simple safety: don't auto-redirect within 90s of a previous redirect
-// function recentlyRedirected() {
-//   const last = Number(sessionStorage.getItem('lastCelebrationRedirectTs') || 0);
-//   return last && (Date.now() - last) < 90_000;
-// }
-
-// async function autoCelebrateIfAny() {
-//   console.log('[celebration] auto: tick');
-//   if (recentlyRedirected()) {
-//     console.log('[celebration] auto: recently redirected, skipping this tick');
-//     return;
-//   }
-//   try {
-//     const ok = await hasValidCelebration();
-//     if (ok) redirectToCelebration('auto-5min');
-//     else console.log('[celebration] auto: no celebrations, skip');
-//   } catch (e) {
-//     console.warn('[celebration] auto: error', e);
-//   }
-// }
-
-// // First auto-check after 5 minutes, then every 5 minutes
-// setTimeout(autoCelebrateIfAny, AUTO_CELEB_MS);
-// setInterval(autoCelebrateIfAny, AUTO_CELEB_MS);
-
-// // --- Manual test helpers ---
-// (function maybeForceCelebrate() {
-//   const params = new URLSearchParams(location.search);
-//   if (params.get('celebrate') === '1') {
-//     hasValidCelebration().then(ok => ok ? redirectToCelebration('url-force') :
-//       console.warn('[celebration] ?celebrate=1 set, but no celebrations.'));
-//   }
-// })();
-// window.addEventListener('keydown', (e) => {
-//   if (e.key.toLowerCase() === 'c') {
-//     hasValidCelebration().then(ok => ok ? redirectToCelebration('key-C') :
-//       console.warn('[celebration] key C, but no celebrations.'));
-//   }
-// });
-
-
-
-
 
 // ---------- Start ----------
 loadSlides();
@@ -341,7 +268,8 @@ loadSlides();
 // Viktig: Vi setter ikke display på #sickleave-box / #grafana-box i JS.
 // La CSS styre at de står side-om-side.
 // ---------- HARD AUTO REDIRECT EVERY 5 MIN ----------
-const HARD_AUTO_MS = 60 * 1000;
+const HARD_AUTO_MS = 3 * 60 * 1000;  // 3 minutes
+
 
 // avoid immediate re-trigger loops when coming back from celebration
 function recentlyRedirected() {
