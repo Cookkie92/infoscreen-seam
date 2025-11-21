@@ -34,6 +34,7 @@ body::before {
   box-sizing: border-box;
   position: relative;
   z-index: 2; /* Always above background */
+  padding-bottom: 80px; /* ensures bottom section never gets pushed out */
 }
 
 body.infoscreen-page {
@@ -50,7 +51,7 @@ body.infoscreen-page {
   overflow: hidden;
   text-align: center;
   transition: all 0.3s ease;
-  height:60vh;
+  max-height:60vh;
 }
 
 .top-section.with-text {
@@ -59,6 +60,15 @@ body.infoscreen-page {
   text-align: left;
   gap: 2rem;
 }
+
+.top-section.with-text .image-wrapper {
+  max-height: 55vh;   /* enforce image size in split layout */
+}
+
+.top-section.with-text .text-wrapper {
+  max-height: 55vh;
+}
+
 
 /* Image styles */
 .image-wrapper {
@@ -71,10 +81,11 @@ body.infoscreen-page {
 
 .image-wrapper img {
   width: 100%;
-  max-height: 65vh;
+  max-height: 55vh;   /* ↓ lowered from 65vh */
   object-fit: contain;
   border-radius: 8px;
 }
+
 
 
 /* slide text*/
@@ -85,6 +96,7 @@ body.infoscreen-page {
   justify-content: center;
   padding-left: 0.5rem;   /* smaller nudge instead of 1.5rem */
   overflow: hidden;
+  max-height:55vh;
 }
 
 .text-wrapper h1 {
