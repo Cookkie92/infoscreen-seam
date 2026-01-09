@@ -10,6 +10,10 @@ html, body {
   box-sizing: border-box;
 }
 
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -19,22 +23,22 @@ body::before {
   height: 500px;
   background: url("./images/propell-uten-fyll.png") no-repeat center;
   background-size: contain;
-  opacity: 0.5;        
+  opacity: 0.5;
   pointer-events: none;
-  z-index: 1;             /* over bakgrunnsfargen, under alt innhold */
+  z-index: 1;
 }
 
 /* Main container for infoscreen */
 .main-container {
-  min-height: 60%;
+  min-height: 100vh;             /* ✅ was 60% */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;   /* ✅ was space-between */
   padding: 2rem;
   box-sizing: border-box;
   position: relative;
   z-index: 2; /* Always above background */
-  padding-bottom: 80px; /* ensures bottom section never gets pushed out */
+  padding-bottom: 1rem;          /* ✅ was 80px hack */
 }
 
 body.infoscreen-page {
@@ -43,7 +47,8 @@ body.infoscreen-page {
 
 /* Top section layout */
 .top-section {
-  flex: 1;
+  flex: 1 1 auto;     /* ✅ allow growth/shrink */
+  min-height: 0;      /* ✅ important in flex layouts */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,7 +56,7 @@ body.infoscreen-page {
   overflow: hidden;
   text-align: center;
   transition: all 0.3s ease;
-  max-height:60vh;
+  max-height: none;   /* ✅ was 60vh (stopped it from taking space back) */
 }
 
 .top-section.with-text {
@@ -69,7 +74,6 @@ body.infoscreen-page {
   max-height: 55vh;
 }
 
-
 /* Image styles */
 .image-wrapper {
   flex: 7;
@@ -81,12 +85,10 @@ body.infoscreen-page {
 
 .image-wrapper img {
   width: 100%;
-  max-height: 55vh;   /* ↓ lowered from 65vh */
+  max-height: 55vh;   /* you had this lowered already */
   object-fit: contain;
   border-radius: 8px;
 }
-
-
 
 /* slide text*/
 .text-wrapper {
@@ -94,9 +96,9 @@ body.infoscreen-page {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 0.5rem;   /* smaller nudge instead of 1.5rem */
+  padding-left: 0.5rem;
   overflow: hidden;
-  max-height:55vh;
+  max-height: 55vh;
 }
 
 .text-wrapper h1 {
@@ -106,7 +108,7 @@ body.infoscreen-page {
   line-height: 1.1;
   color: #ffffff;
   margin: 0 0 1rem 0;
-  text-align: left;  /* <-- changed from center to left */
+  text-align: left;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -115,7 +117,7 @@ body.infoscreen-page {
   display: block;
   width: 200px;
   height: 4px;
-  margin: 1.5rem 0 0; /* left-aligned underline */
+  margin: 1.5rem 0 0;
   background: #007bff;
   border-radius: 2px;
   opacity: 0.2;
@@ -125,22 +127,20 @@ body.infoscreen-page {
   font-size: 1.25rem;
   line-height: 1.6;
   margin: 0 0 1rem 0;
-  text-align: left; /* <-- also left aligned */
-  white-space: pre-line;   /* preserve Enter/newlines from textarea */
+  text-align: left;
+  white-space: pre-line;
 }
-
-
 
 /* ============================
    📦 Bottom Section Container
 ============================ */
 .bottom-section {
   font-family: Arial, Helvetica, sans-serif;
-  padding: 1rem 2rem;
-  margin-top: 3rem;
+  padding: 0.6rem 1.2rem;
+  margin-top: auto;            /* ✅ anchors to bottom */
   background-color:  #111;
   border-top: 2px solid #525151;
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -148,60 +148,53 @@ body.infoscreen-page {
 .bottom-info.combined-layout {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+  gap: 1.2rem;
   flex-wrap: nowrap;
   width: 100%;
   align-items: stretch;
 }
 
-
 /* ============================
    📊 Stat Column Styling
 ============================ */
-/* 📊 Statistikk-kolonne (venstre side) */
 .stat-column {
   flex: 1 1 40%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  min-width: 300px;
+  gap: 0.6rem;
+  min-width: 260px;
 }
 
-/* 📦 Stat-bokser */
 .stat-box {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 20px;
-  background-color: #111; /* Mørkere og matcher grafana */
-  border-radius: 10px;
+  padding: 10px 14px;
+  background-color: #111;
+  border-radius: 8px;
   border: none;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4); /* Diskret dybde */
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4);
 }
 
 .stat-box:hover {
   background-color: #1a1a2d;
 }
 
-/* 📘 Tittel (venstre side i boksen) */
 .stat-box p {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  color: #cbd5e1; /* Myk lys gråblå */
+  color: #cbd5e1;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* 🔢 Verdi (høyre side i boksen) */
 .stat-box span {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: bold;
   color: #ffffff;
   margin-left: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
-
 
 /* ============================
    📈 Grafana Column Styling
@@ -212,25 +205,80 @@ body.infoscreen-page {
   flex-direction: column;
   background-color: #111;
   border-radius: 10px;
-  overflow: hidden;             /* needed to crop */
-  min-height: 400px;            /* Ensure height is enough */
+  overflow: hidden;
+  min-height: 260px;
   max-height: none;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;           /* allow iframe positioning */
+  position: relative;
 }
 
 .grafana-column iframe {
   flex: 1;
   width: 150%;
-  height: 115%;                 /* make iframe taller */
+  height: 115%;
   border: none;
   display: block;
-  position: absolute;           /* position inside container */
-  top: -15%;                    /* shift up by 15% */
+  position: absolute;
+  top: -15%;
   left: 0;
 }
 
+/* 🕒 Digital klokke */
+.clock {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #cceeff;
+  text-align: right;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: fit-content;
+  margin-left: auto;
+  margin-bottom: 1rem;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+/*slideshow fades*/
+#slide-image.fade-out,
+#slide-heading.fade-out,
+#slide-paragraph.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#slide-image,
+#slide-heading,
+#slide-paragraph {
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+/* Combined movement and spin */
+@keyframes floatAndSpin {
+  0%   { transform: translate(0px, 0px) rotate(0deg); }
+  50%  { transform: translate(200px, -250px) rotate(180deg); }
+  100% { transform: translate(-200px, 250px) rotate(360deg); }
+}
+
+/* Fading remains the same */
+@keyframes fade {
+  from { opacity: 0.2; }
+  to   { opacity: 0.5; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .admin-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .slide-item img {
+    max-width: 100%;
+  }
+}
 
 /* ---------------------- */
 /* Admin Section Styling  */
@@ -253,7 +301,6 @@ button.delete-all-btn:hover {
   background-color: #c82333;
   transform: scale(1.05);
 }
-
 
 .admin-container {
   max-width: 850px;
@@ -348,6 +395,7 @@ button.delete-all-btn:hover {
   background-color: #003366;
   color: white;
 }
+
 .setting-label {
   margin-top: 10px;
   margin-bottom: 5px;
@@ -355,7 +403,6 @@ button.delete-all-btn:hover {
   color: #cce7ff;
   display: block;
 }
-
 
 /* Make color pickers more visually distinct */
 .admin-form input[type="color"] {
@@ -472,23 +519,6 @@ button.delete-btn:hover {
   resize: vertical;
 }
 
-/*slideshow ?*/
-
-#slide-image.fade-out,
-#slide-heading.fade-out,
-#slide-paragraph.fade-out {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-}
-
-#slide-image,
-#slide-heading,
-#slide-paragraph {
-  transition: opacity 0.5s ease-in-out;
-  opacity: 1;
-}
-
-
 /* Toast Notification */
 .toast {
   position: fixed;
@@ -511,63 +541,6 @@ button.delete-btn:hover {
   opacity: 1;
   bottom: 50px;
 }
-
-
-/* 🕒 Digital klokke */
-.clock {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #cceeff;
-  text-align: right;
-  padding: 0.5rem 1rem;
-  background-color: rgba(255, 255, 255, 0.04);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  width: fit-content;
-  margin-left: auto;
-  margin-bottom: 1rem;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-
-
-/* Combined movement and spin */
-@keyframes floatAndSpin {
-  0% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  50% {
-    transform: translate(200px, -250px) rotate(180deg);
-  }
-  100% {
-    transform: translate(-200px, 250px) rotate(360deg);
-  }
-}
-
-/* Fading remains the same */
-@keyframes fade {
-  from {
-    opacity: 0.2;
-  }
-  to {
-    opacity: 0.5;
-  }
-}
-
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .admin-container {
-    margin: 20px;
-    padding: 20px;
-  }
-
-  .slide-item img {
-    max-width: 100%;
-  }
-}
-
 
 /* ===================================================================== */
 /*                         ADMIN PANEL (admin.html)                      */
@@ -708,7 +681,7 @@ button.delete-btn:hover {
   flex-direction: column;
   gap: 6px;
   position: relative;
-  z-index: 1; /* above the card gradient */
+  z-index: 1;
 }
 
 .admin-body .admin-form label {
@@ -887,7 +860,6 @@ button.delete-btn:hover {
   gap: 32px;
   padding: 8px 0;
 }
-
 
 .admin-body .slide-item {
   background-color: rgba(0, 22, 55, 0.95);
