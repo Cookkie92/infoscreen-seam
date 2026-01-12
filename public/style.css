@@ -64,6 +64,7 @@ body.infoscreen-page {
   align-items: stretch;
   text-align: left;
   gap: 2rem;
+  padding-top:5vh;
 }
 
 .top-section.with-text .image-wrapper {
@@ -214,7 +215,7 @@ body.infoscreen-page {
 
 .grafana-column iframe {
   flex: 1;
-  width: 150%;
+  width: 240%;
   height: 115%;
   border: none;
   display: block;
